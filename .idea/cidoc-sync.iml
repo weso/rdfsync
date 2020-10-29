@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="PYTHON_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/wbsync" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/wbsync/githubcon" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/wbsync/external" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/wbsync/synchronization" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/wbsync/githubcon/examples" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/wbsync/triplestore" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/wbsync/util" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/wbsync/rdfsync" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/wbsync/rdfsync/files" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/wbsync/githubcon/util" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

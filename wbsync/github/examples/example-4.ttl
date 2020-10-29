@@ -1,8 +1,0 @@
-@prefix ex: <http://example.com/> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-
-ex:msg1 rdf:type ex:msg; 
-	ex:to "bobo";
-	ex:from "alice" ;
-	ex:subj "alice to bobo 1";
-	.

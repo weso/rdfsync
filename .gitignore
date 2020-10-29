@@ -3,7 +3,8 @@ instance
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-
+.idea/codeStyles/
+.idea/
 
 .pytest_cache/
 

@@ -6,7 +6,6 @@ __pycache__/
 .idea/codeStyles/
 .idea/
 
-
 .pytest_cache/
 
 .DS_Store

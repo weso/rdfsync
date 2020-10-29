@@ -3,7 +3,7 @@
 import pickle
 import os
 
-URIS_FILE = os.path.join(os.getcwd(), 'rdfsync/uris.pkl')
+URIS_FILE = os.path.join(os.getcwd(), 'uris.pkl')
 
 class URIFactory():
     class __URIFactory():

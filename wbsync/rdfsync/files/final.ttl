@@ -1,0 +1,1525 @@
+@prefix asio: <http://purl.org/hercules/asio/core#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix modules: <http://purl.org/hercules/asio/modules#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ro: <http://purl.org/wf4ever/ro#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+dc:contributor a owl:AnnotationProperty .
+
+dc:creator a owl:AnnotationProperty .
+
+dc:description a owl:AnnotationProperty .
+
+dc:title a owl:AnnotationProperty .
+
+dct:license a owl:AnnotationProperty .
+
+asio: a owl:Ontology ;
+    dc:contributor "Alejandro González Hevia"^^xsd:string,
+        "José Emilio Labra Gayo"^^xsd:string ;
+    dc:creator "Emilio Rubiera Azcona"^^xsd:string ;
+    dc:description "An ontology to address the Research Management of the CRUE's Spanish University System (Sistema Universitario Español) by applying an encompassing model not only capable of addressing the universities of the CRUE but also more belonging to the European Union."^^xsd:string ;
+    dc:title "The ASIO ontology"^^xsd:string ;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
+    owl:versionIRI <http://purl.org/hercules/asio/core/0.0.1> ;
+    owl:versionInfo "0.0.1"^^xsd:string .
+
+asio:Abstract a owl:Class ;
+    rdfs:label "Abstract"@en ;
+    rdfs:comment "An abstract that is published as a standalone document or in a journal of abstracts."@en ;
+    rdfs:subClassOf asio:Publication .
+
+asio:Administrative a asio:Role,
+        owl:NamedIndividual .
+
+asio:AdministrativeEntity a owl:Class ;
+    rdfs:label "Entitats administratives"@ca-ad,
+        "Entitats administratives"@ca-es,
+        "Administrative entities"@en,
+        "Entidades administrativas"@es,
+        "Entités administratives"@fr,
+        "Entidades administrativas"@pt ;
+    rdfs:comment "This vertical module in ASIO models all the relevant administrative bodies (\"Administración Autonómica\") of Spain's Autonomous Communities (conserjerías, departamentos, secretarías) that might have a role (funding, participating) within the development of a given project. It is modeled hierarchically through the relevant administrative levels thereof."@en ;
+    rdfs:subClassOf skos:ConceptScheme ;
+    skos:prefLabel "Entitats administratives"@ca-ad,
+        "Entitats administratives"@ca-es,
+        "Administrative entities"@en,
+        "Entidades administrativas"@es,
+        "Entités administratives"@fr,
+        "Entidades administrativas"@pt .
+
+asio:AudioDocument a owl:Class ;
+    rdfs:label "Audio document"@en ;
+    rdfs:comment "Recorded audio in any format."@en ;
+    rdfs:subClassOf asio:ScientificPublication .
+
+asio:AudioVisualDocument a owl:Class ;
+    rdfs:label "Audio-visual document"@en ;
+    rdfs:comment "Audiovisual recording in any format"@en ;
+    rdfs:subClassOf asio:Publication .
+
+asio:BachelorsThesis a owl:Class ;
+    rdfs:label "Trabayu de fin de grau"@ast,
+        "Treball fi de bàtxelor"@ca-ad,
+        "Treball fi de grau"@ca-es,
+        "Bachelor's thesis"@en,
+        "Trabajo de fin de grado"@es-es,
+        "Mémoire de fin de licence"@fr ;
+    rdfs:comment "A thesis reporting a research project undertaken as part of an undergraduate course of education to receive a bachelor's degree."@en ;
+    rdfs:subClassOf asio:Thesis ;
+    owl:disjointWith asio:MastersThesis,
+        asio:PhDThesis ;
+    skos:altLabel "TFG"@ast,
+        "TFB"@ca-ad,
+        "TFG"@ca-es,
+        "Treball de fi de carrera"@ca-es,
+        "Honour's thesis"@en-ca,
+        "Honour's thesis"@en-gb,
+        "Honor's thesis"@en-us,
+        "TFG"@es,
+        "Trabajo de fin de carrera"@es,
+        "GALa"@eu,
+        "TFG"@gl,
+        "Traballo de fin de carreira"@gl ;
+    skos:prefLabel "Trabayu de fin de grau"@ast,
+        "Treball de fi de bàtxelor"@ca-ad,
+        "Treball de fi de grau"@ca-es,
+        "Bachelor's thesis"@en,
+        "Trabajo de fin de grado"@es-es,
+        "Gradu Amaierako Lana"@eu,
+        "Mémoire de fin de licence"@fr,
+        "Traballo de fin de grao"@gl .
+
+asio:BacherlorsDegree a owl:Class ;
+    rdfs:label "Títol de bàtxelor"@ca-ad,
+        "Títol de grau"@ca-es,
+        "Bachelor's degree"@en,
+        "Título de grado"@es,
+        "Licenciatura (pós-Bologna)"@pt-pt ;
+    rdfs:comment "An undergraduate academic degree awarded by colleges and universities upon completion of a course of study lasting three to four years (depending on institution and academic discipline)."@en ;
+    rdfs:subClassOf asio:AcademicDegree ;
+    skos:altLabel "Bàtxelor"@ca-ad,
+        "Grau"@ca-es,
+        "Grado"@es,
+        "Gradu"@eu,
+        "Grao"@gl,
+        "Grau"@pt ;
+    skos:prefLabel "Títol de bàtxelor"@ca-ad,
+        "Títol de grau"@ca-es,
+        "Bachelor's degree"@en,
+        "Título de grado"@es,
+        "Licenciatura (pós-Bologna)"@pt-pt .
+
+asio:CaseStudy a owl:Class ;
+    rdfs:label "Case study"@en ;
+    rdfs:comment "A qualitative descriptive research study of individuals or a group."@en ;
+    rdfs:subClassOf asio:ScientificPublication .
+
+asio:Catalog a owl:Class ;
+    rdfs:label "Catalog"@en ;
+    rdfs:comment "A list of items in a collection; an ordered compilation of item descriptions and sufficient information to afford access to them."@en ;
+    rdfs:subClassOf asio:Publication .
+
+asio:CatedraticoEscuelaUniversitaria a asio:Role,
+        owl:NamedIndividual ;
+    rdfs:label "Catedráticu d'escuela universitaria"@ast,
+        "Catedràtic d'escola universitària"@ca-ad,
+        "Catedrático de escuela universitaria"@es,
+        "Catedrático de escola universitaria"@gl .
+
+asio:CatedraticoUniversidad a asio:Role,
+        owl:NamedIndividual ;
+    rdfs:label "Catedráticu d'universidá"@ast,
+        "Catedràtic d'universitat"@ca-ad,
+        "Catedrático de universidad"@es,
+        "Catedrático de universidade"@gl .
+
+asio:Conference a owl:Class ;
+    rdfs:label "Conference"@en ;
+    rdfs:comment "A meeting for consultation or discussion. [Source: http://purl.org/ontology/bibo/Conference]"@en ;
+    rdfs:subClassOf <http://purl.org/NET/c4dm/event.owl#Event> .
+
+asio:ConferencePoster a owl:Class ;
+    rdfs:label "Conference poster"@en ;
+    rdfs:comment "The digital file (or physical equivalent), if available after the conference, vs. the act of attending/presenting."@en ;
+    rdfs:subClassOf asio:Publication .
+
+asio:Database a owl:Class ;
+    rdfs:subClassOf asio:CollectedDocument .
+
+asio:DoctoralDegree a owl:Class ;
+    rdfs:label "Doctorat"@ca-ad,
+        "Doctorat"@ca-es,
+        "Doctoral degree"@en,
+        "Doctorado"@es,
+        "Doktorego"@eu,
+        "Doctorat"@fr-be,
+        "Doctorat"@fr-ca,
+        "Doctorat"@fr-ch,
+        "Doctorat"@fr-fr,
+        "Doutoramento"@gl,
+        "Doutoramento"@pt ;
+    rdfs:subClassOf asio:AcademicDegree ;
+    skos:altLabel "Doctorate"@en,
+        "Doktoretza"@eu ;
+    skos:prefLabel "Doctorat"@ca-ad,
+        "Doctorat"@ca-es,
+        "Doctoral degree"@en,
+        "Doctorado"@es,
+        "Doktorego"@eu,
+        "Doctorat"@fr-be,
+        "Doctorat"@fr-ca,
+        "Doctorat"@fr-ch,
+        "Doctorat"@fr-fr,
+        "Doutoramento"@gl,
+        "Doutoramento"@pt .
+
+asio:EditedPublication a owl:Class ;
+    rdfs:label "Edited publication"@en ;
+    rdfs:subClassOf asio:ScientificPublication .
+
+asio:EmploymentContract a owl:Class ;
+    rdfs:label "Contracte de treball"@ca-ad,
+        "Contracte de treball"@ca-es,
+        "Employment contract"@en,
+        "Contrato de trabajo"@es,
+        "Contrat de travail"@fr,
+        "Contrato de trabalho"@pt ;
+    rdfs:subClassOf asio:Contract ;
+    skos:prefLabel "Contracte de treball"@ca-ad,
+        "Contracte de treball"@ca-es,
+        "Employment contract"@en,
+        "Contrato de trabajo"@es,
+        "Contrat de travail"@fr,
+        "Contrato de trabalho"@pt .
+
+asio:EuropeanProject a owl:Class ;
+    rdfs:label "Projecte europeu"@ca-ad,
+        "Projecte europeu"@ca-es,
+        "European project"@en,
+        "Proyecto europeo"@es,
+        "Projet européen"@fr,
+        "Projeto europeu"@pt ;
+    rdfs:comment "A project developed and funded at the European level."@en ;
+    rdfs:subClassOf foaf:Project ;
+    skos:prefLabel "Projecte europeu"@ca-ad,
+        "Projecte europeu"@ca-es,
+        "European project"@en,
+        "Proyecto europeo"@es,
+        "Projet européen"@fr,
+        "Projeto europeu"@pt .
+
+asio:EventOrganiser a asio:Role,
+        owl:NamedIndividual ;
+    rdfs:label "Event organiser"@en ;
+    rdfs:comment "A role of organising cientific events, such as conferences, workshops, etc."@en .
+
+asio:EventSeries a owl:Class ;
+    rdfs:label "Event series"@en ;
+    rdfs:comment "A generic class which may include a conference series, a course section, a seminar series, or a workshop series. When possible, use one of these more specific classes."@en .
+
+asio:FundingAgency a owl:Class ;
+    rdfs:label "Funding agency"@en .
+
+asio:FundingOrganization a owl:Class ;
+    rdfs:label "Funding organization"@en ;
+    rdfs:subClassOf foaf:Organization .
+
+asio:FundingProgramme a owl:Class ;
+    rdfs:label "Funding programme"@en ;
+    rdfs:comment "A programme of related funded projects, typically established by a funding organization."@en .
+
+asio:InternalProject a owl:Class ;
+    rdfs:label "Internal project"@en ;
+    rdfs:subClassOf foaf:Project .
+
+asio:InternationalProject a owl:Class ;
+    rdfs:label "Projecte internacional"@ca-es,
+        "International project"@en,
+        "Proyecto internacional"@es,
+        "Projet international"@fr,
+        "Projeto internacional"@pt ;
+    rdfs:comment "A consortium project integrated by partners from diverse countries beyond the scope of the European Union."@en ;
+    rdfs:subClassOf foaf:Project .
+
+asio:Manual a owl:Class ;
+    rdfs:label "Manual"@en ;
+    rdfs:comment "A book of instructions or guide to a specific topic."@en ;
+    rdfs:subClassOf asio:ScientificPublication ;
+    skos:altLabel "Handbook"@en ;
+    skos:prefLabel "Manual"@en .
+
+asio:MasterStudent a asio:Role,
+        owl:NamedIndividual .
+
+asio:MastersDegree a owl:Class ;
+    rdfs:label "Màster universitari"@ca-ad,
+        "Màster universitari"@ca-es,
+        "Master's degree"@en,
+        "Máster universitario"@es-es,
+        "Magister Scientiae"@es-ve,
+        "Maîtrise universitaire"@fr-be,
+        "Maîtrise universitaire"@fr-ca,
+        "Maîtrise universitaire"@fr-ch,
+        "Maîtrise universitaire"@fr-fr,
+        "Máster universitario"@gl,
+        "Mestrado"@pt-br,
+        "Mestrado"@pt-pt ;
+    rdfs:subClassOf asio:AcademicDegree ;
+    skos:altLabel "Mestratge universitari"@ca-ad,
+        "Mestratge universitari"@ca-es,
+        "Mestrado universitario"@gl ;
+    skos:prefLabel "Màster universitari"@ca-ad,
+        "Màster universitari"@ca-es,
+        "Master's degree"@en,
+        "Máster universitario"@es-es,
+        "Magister Scientiae"@es-ve,
+        "Maîtrise universitaire"@fr-be,
+        "Maîtrise universitaire"@fr-ca,
+        "Maîtrise universitaire"@fr-ch,
+        "Maîtrise universitaire"@fr-fr,
+        "Máster universitario"@gl,
+        "Mestrado"@pt-br,
+        "Mestrado"@pt-pt .
+
+asio:NationalProject a owl:Class ;
+    rdfs:label "Projecte nacional"@ca-ad,
+        "Projecte nacional"@ca-es,
+        "National project"@en,
+        "Proyecto nacional"@es,
+        "Projet national"@fr,
+        "Projeto nacional"@pt ;
+    rdfs:comment "A project developed and funded at the national level."@en ;
+    rdfs:subClassOf foaf:Project ;
+    skos:prefLabel "Projecte nacional"@ca-ad,
+        "Projecte nacional"@ca-es,
+        "National project"@en,
+        "Proyecto nacional"@es,
+        "Projet national"@fr,
+        "Projeto nacional"@pt .
+
+asio:PASfuncionario a asio:Role,
+        owl:NamedIndividual ;
+    rdfs:label "PAS funcionariu"@ast,
+        "PAS funcionari"@ca-ad,
+        "PAS funcionario"@es,
+        "PAS funcionario"@gl .
+
+asio:PASlaboral a asio:Role,
+        owl:NamedIndividual ;
+    rdfs:label "PAS laboral"@ca-ad,
+        "PAS laboral"@es .
+
+asio:PeerReviewedArticle a owl:Class ;
+    rdfs:label "Peer-reviewed article"@en ;
+    rdfs:subClassOf asio:Article .
+
+asio:PhDStudent a asio:Role,
+        owl:NamedIndividual .
+
+asio:Proceedings a owl:Class ;
+    rdfs:label "Proceedings"@en ;
+    rdfs:comment "A book integrated by a compilation of documents published from an event, such as a conference."@en ;
+    rdfs:subClassOf asio:Book .
+
+asio:ProjectBudget a owl:Class ;
+    rdfs:label "Pressupost de projecte"@ca-ad,
+        "Pressupost de projecte"@ca-es,
+        "Project budget"@en,
+        "Presupuesto de proyecto"@es,
+        "Budget de projet"@fr,
+        "Orçamento de projeto"@pt ;
+    rdfs:comment "The budget established or devoted to a project."@en ;
+    rdfs:subClassOf asio:Budget ;
+    skos:prefLabel "Pressupost de projecte"@ca-ad,
+        "Pressupost de projecte"@ca-es,
+        "Project budget"@en,
+        "Presupuesto de proyecto"@es,
+        "Budget de projet"@fr,
+        "Orçamento de projeto"@pt .
+
+asio:Publishes a owl:ObjectProperty ;
+    rdfs:label "publishes"@en ;
+    rdfs:domain foaf:Agent ;
+    rdfs:range asio:Publication ;
+    owl:inverseOf asio:publishedBy .
+
+asio:RegionalProject a owl:Class ;
+    rdfs:label "Projecte regional"@ca-ad,
+        "Projecte regional"@ca-es,
+        "Regional project"@en,
+        "Proyecto regional"@es,
+        "Projet régional"@fr,
+        "Projeto regional"@pt ;
+    rdfs:comment "A project developed and funded at the regional level."@en ;
+    rdfs:subClassOf foaf:Project ;
+    skos:prefLabel "Projecte regional"@ca-ad,
+        "Projecte regional"@ca-es,
+        "Regional project"@en,
+        "Proyecto regional"@es,
+        "Projet régional"@fr,
+        "Projeto regional"@pt .
+
+asio:ResearchField a owl:Class ;
+    rdfs:label "Research field"@en .
+
+asio:ResearchGroup a owl:Class ;
+    rdfs:label "Grup de recerca"@ca-ad,
+        "Grup d'investigació"@ca-es,
+        "Research group"@en,
+        "Grupo de investigación"@es,
+        "Group de recherche"@fr,
+        "Grupo de investigação"@pt ;
+    rdfs:comment "A group of researchers often from the same centre, specialised on the same subject, working together on the issue or topic."@en ;
+    rdfs:subClassOf foaf:Group ;
+    skos:prefLabel "Grup de recerca"@ca-ad,
+        "Grup d'investigació"@ca-es,
+        "Research group"@en,
+        "Grupo de investigación"@es,
+        "Group de recherche"@fr,
+        "Grupo de investigação"@pt .
+
+asio:Researching a asio:Role,
+        owl:NamedIndividual .
+
+asio:SME a owl:Class ;
+    rdfs:label "Petita i mitjana empresa"@ca-ad,
+        "Petita i mitjana empresa"@ca-es,
+        "Small and medium-sized enterprise"@en,
+        "Pequeña y mediana empresa"@es,
+        "Petite ou moyenne entreprise"@fr,
+        "Pequena e média empresa"@pt ;
+    rdfs:comment "A company whose personnel numbers fall below certain limits."@en ;
+    rdfs:subClassOf asio:Company ;
+    skos:prefLabel "Petita i mitjana empresa"@ca-ad,
+        "Petita i mitjana empresa"@ca-es,
+        "Small and medium-sized enterprise"@en,
+        "Pequeña y mediana empresa"@es,
+        "Petite ou moyenne entreprise"@fr,
+        "Pequena e média empresa"@pt .
+
+asio:SealOfQuality a owl:Class ;
+    rdfs:label "Segell de qualitat"@ca-ad,
+        "Segell de qualitat"@ca-es,
+        "Seal of quality"@en,
+        "Sello de calidad"@es,
+        "Label qualité"@fr,
+        "Selo de qualidade"@pt ;
+    rdfs:comment "A graphic mark indicating highest levels of quality in research, often measured in terms of relevant publications related to the researching activity."@en ;
+    skos:prefLabel "Segell de qualitat"@ca-ad,
+        "Segell de qualitat"@ca-es,
+        "Seal of quality"@en,
+        "Sello de calidad"@es,
+        "Label qualité"@fr,
+        "Selo de qualidade"@pt .
+
+asio:ServiceContract a owl:Class ;
+    rdfs:label "Contracte de servei"@ca-es,
+        "Service contract"@en,
+        "Contrato de servicio"@es,
+        "Contrat de service"@fr,
+        "Contrato de serviço"@pt ;
+    rdfs:subClassOf asio:Contract ;
+    skos:prefLabel "Contracte de servei"@ca-es,
+        "Service contract"@en,
+        "Contrato de servicio"@es,
+        "Contrat de service"@fr,
+        "Contrato de serviço"@pt .
+
+asio:SpainUniversityStaffing a owl:Class ;
+    rdfs:label "Spain's university staffing"@en ;
+    rdfs:comment "This ASIO vertical module defines Spain's University staffing model encompassing all its specificities."@en ;
+    rdfs:subClassOf skos:ConceptScheme ;
+    skos:prefLabel "Spain's university staffing"@en .
+
+asio:Teaching a asio:Role,
+        owl:NamedIndividual .
+
+asio:TechnicalReport a owl:Class ;
+    rdfs:label "Technical report"@en ;
+    rdfs:subClassOf asio:Report ;
+    skos:prefLabel "Technical report"@en .
+
+asio:TechnicalSupport a asio:Role,
+        owl:NamedIndividual .
+
+asio:TitularUniversidad a asio:Role,
+        owl:NamedIndividual ;
+    rdfs:label "Profesor titular d'universidá"@ast,
+        "Professor titular d'universitat"@ca-ad,
+        "Profesor titular de universidad"@es,
+        "Profesor titular de universidade"@gl .
+
+asio:UndergraduateStudent a asio:Role,
+        owl:NamedIndividual .
+
+asio:UniversityDivision a owl:Class ;
+    rdfs:label "Divisió d'universitat"@ca-ad,
+        "Divisió d'universitat"@ca-es,
+        "University division"@en,
+        "División de universidad"@es,
+        "Division d'université"@fr,
+        "División de universidade"@gl,
+        "Divisão de universidade"@pt ;
+    rdfs:comment "A division within a university (school, faculty, etc.)"@en ;
+    rdfs:subClassOf asio:University .
+
+asio:Workshop a owl:Class ;
+    rdfs:label "Workshop"@en ;
+    rdfs:comment "A seminar, discussion group, or the like, that emphasizes zxchange of ideas and the demonstration and application of techniques, skills, etc. [Source: http://purl.org/ontology/bibo/Workshop]"@en ;
+    rdfs:subClassOf <http://purl.org/NET/c4dm/event.owl#Event> .
+
+asio:accepted a asio:Status,
+        owl:NamedIndividual ;
+    rdfs:label "Accepted"@en .
+
+asio:addresses a owl:ObjectProperty ;
+    rdfs:label "addresses"@en ;
+    rdfs:domain asio:ResearchContribution ;
+    rdfs:range asio:ResearchProblem .
+
+asio:advises a owl:ObjectProperty ;
+    rdfs:label "advises"@en ;
+    rdfs:domain foaf:Person ;
+    rdfs:range asio:AcademicPublication ;
+    owl:inverseOf asio:isAdvisedBy .
+
+asio:associatedWith a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:label "associated with"@en ;
+    rdfs:comment "an organisation (i.e. university) is associated with another organsiation (i.e. research institute)."@en ;
+    rdfs:domain foaf:Agent ;
+    rdfs:range foaf:Agent .
+
+asio:atContext a owl:ObjectProperty ;
+    rdfs:label "at context"@en ;
+    rdfs:comment "This property enables to relate a profile with a given context (geographical, temporal, spatial, social, etc.)."@en ;
+    rdfs:domain asio:Profile ;
+    rdfs:range asio:Context .
+
+asio:authorCitation a owl:ObjectProperty ;
+    rdfs:label "author citations"@en ;
+    rdfs:comment "A property to link the number of citations to a given author."@en ;
+    rdfs:domain foaf:Person ;
+    rdfs:range asio:QualifiedValue .
+
+asio:authors a owl:ObjectProperty ;
+    rdfs:label "authors"@en ;
+    rdfs:domain foaf:Agent ;
+    rdfs:range asio:Publication ;
+    owl:inverseOf asio:isAuthoredBy .
+
+asio:awardedWith a owl:DatatypeProperty ;
+    rdfs:label "awarded with"@en ;
+    rdfs:domain asio:Publication ;
+    rdfs:range xsd:string .
+
+asio:awards a owl:InverseFunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:label "awards"@en ;
+    rdfs:comment "An object property linking an agent to something the agent awards, for example linking a funding agency to a grant, a university to a degree, or an organization to a prize. [source: cerif/frapo]"@en ;
+    rdfs:domain foaf:Agent ;
+    owl:inverseOf asio:isAwardedBy .
+
+asio:awardsss a owl:InverseFunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:label "awardsss"@en ;
+    rdfs:comment "An objectsss property linking an agent to something the agent awards, for example linking a funding agency to a grant, a university to a degree, or an organization to a prize. [source: cerif/frapo]"@en ;
+    rdfs:domain foaf:Agent ;
+    owl:inverseOf asio:isAwardedBy .
+
+asio:cancelled a asio:Status,
+        owl:NamedIndividual ;
+    rdfs:label "Cancelled"@en .
+
+asio:capital a owl:ObjectProperty ;
+    rdfs:label "capital"@en ;
+    rdfs:comment "A property to indicate that a place is the official seat of government in a political entity."@en ;
+    rdfs:domain skos:Concept ;
+    rdfs:range skos:Concept .
+
+asio:cites a owl:ObjectProperty ;
+    rdfs:label "cites"@en ;
+    rdfs:comment "a property to indicate that a document cites another one."@en ;
+    rdfs:domain asio:Publication ;
+    rdfs:range asio:Publication .
+
+asio:closed a asio:Status,
+        owl:NamedIndividual ;
+    rdfs:label "Closed"@en .
+
+asio:coadvisedBy a owl:ObjectProperty ;
+    rdfs:label "co-advised by"@en ;
+    rdfs:comment "An academic publication (bachelor thesis, master thesis or doctoral thesis) is co-advised by an advisor."@en ;
+    rdfs:domain asio:AcademicPublication ;
+    rdfs:range foaf:Person .
+
+asio:coadvises a owl:ObjectProperty ;
+    rdfs:label "co-advises"@en ;
+    rdfs:comment "A person co-advises an academic publication (bachelor thesis, master thesis or doctoral thesis)."@en ;
+    rdfs:domain foaf:Person ;
+    rdfs:range asio:AcademicPublication .
+
+asio:coauthors a owl:ObjectProperty ;
+    rdfs:label "co-authors"@en ;
+    rdfs:domain foaf:Agent ;
+    rdfs:range asio:Publication .
+
+asio:codeOf a owl:ObjectProperty ;
+    rdfs:label "code of"@en ;
+    rdfs:comment "A code is assigned to a concept."@en ;
+    rdfs:domain skos:Concept ;
+    rdfs:range skos:Concept ;
+    owl:inverseOf asio:hasCode .
+
+asio:companyFounder a owl:ObjectProperty ;
+    rdfs:label "company founder"@en ;
+    rdfs:domain foaf:Person ;
+    rdfs:range asio:Company .
+
+asio:coordinatedBy a owl:ObjectProperty ;
+    rdfs:label "coordinated by"@en ;
+    rdfs:comment "inverse property of 'project coordinator'"@en ;
+    rdfs:domain foaf:Project ;
+    rdfs:range foaf:Agent ;
+    owl:inverseOf asio:projectCoordinator .
+
+asio:country a owl:ObjectProperty ;
+    rdfs:label "country"@en,
+        "país"@es ;
+    rdfs:comment "This property indicates the nationality of a resource. The domain is not set so unpredicted resources within the ontology could be attached to countries."@en ;
+    rdfs:range asio:Country .
+
+asio:employs a owl:ObjectProperty ;
+    rdfs:label "employs"@en,
+        "emplea"@es ;
+    rdfs:domain asio:ResearchContribution ;
+    rdfs:range asio:ResearchMethod .
+
+asio:funded a asio:Status,
+        owl:NamedIndividual ;
+    rdfs:label "Funded"@en .
+
+asio:funds a owl:ObjectProperty ;
+    rdfs:label "funds"@en ;
+    rdfs:domain foaf:Agent ;
+    owl:inverseOf asio:isFundedBy .
+
+asio:geoDivision a owl:ObjectProperty ;
+    rdfs:label "geodivision"@en ;
+    rdfs:comment "A property to link a resource to a predefined geographical (or geopolitical) division."@en ;
+    rdfs:domain skos:Concept ;
+    rdfs:range modules:GeopoliticalEntities .
+
+asio:h-index a owl:ObjectProperty ;
+    rdfs:label "A property to express the h-index of an author."@en,
+        "h-index"@en ;
+    rdfs:domain foaf:Person ;
+    rdfs:range asio:QualifiedValue .
+
+asio:hasCV a owl:ObjectProperty ;
+    rdfs:label "has CV"@en ;
+    rdfs:domain foaf:Person ;
+    rdfs:range asio:CV .
+
+asio:hasDOI a owl:DatatypeProperty ;
+    rdfs:label "has DOI"@en ;
+    rdfs:domain asio:Publication ;
+    rdfs:range xsd:string .
+
+asio:hasORCID a owl:DatatypeProperty ;
+    rdfs:label "has ORCID"@en ;
+    rdfs:domain foaf:Person ;
+    rdfs:range xsd:string .
+
+asio:hasPatent a owl:ObjectProperty ;
+    rdfs:label "has patent"@en ;
+    rdfs:range asio:Patent .
+
+asio:hasResearchContribution a owl:ObjectProperty ;
+    rdfs:label "has research contribution"@en .
+
+asio:hasResearchField a owl:ObjectProperty ;
+    rdfs:label "has research field"@en .
+
+asio:hasResearchLine a owl:ObjectProperty ;
+    rdfs:label "has research line"@en ;
+    rdfs:comment "a property linking organizations or groups with scientific domains"@en ;
+    rdfs:domain foaf:Agent ;
+    rdfs:range skos:Concept .
+
+asio:hasResearcherID a owl:DatatypeProperty ;
+    rdfs:label "has Researcher ID"@en ;
+    rdfs:domain foaf:Person ;
+    rdfs:range xsd:string .
+
+asio:hasScientificDomain a owl:ObjectProperty ;
+    rdfs:label "has scientific domain"@en ;
+    rdfs:range skos:Concept .
+
+asio:hasSealOfQuality a owl:ObjectProperty ;
+    rdfs:label "has seal of quality"@en ;
+    rdfs:domain foaf:Agent ;
+    rdfs:range asio:ResearchInstitute .
+
+asio:hasTRL a owl:DatatypeProperty ;
+    rdfs:label "has TRL"@en ;
+    rdfs:comment "A prototype has a given technology readiness level"@en ;
+    rdfs:domain asio:Prototype ;
+    rdfs:range xsd:integer .
+
+asio:i10-index a owl:ObjectProperty ;
+    rdfs:label "i10-index"@en ;
+    rdfs:comment "A property to express the i10-index of an author."@en ;
+    rdfs:domain foaf:Person ;
+    rdfs:range asio:QualifiedValue .
+
+asio:isActive a owl:DatatypeProperty ;
+    rdfs:label "is active"@en ;
+    rdfs:comment """This property allows to specify which is the user profile that is active,
+given a interaction between two applications."""@en ;
+    rdfs:domain asio:Profile ;
+    rdfs:range xsd:boolean .
+
+asio:isCoauthoredBy a owl:ObjectProperty ;
+    rdfs:label "is co-authored by"@en ;
+    rdfs:domain asio:Publication ;
+    rdfs:range foaf:Agent .
+
+asio:isCompetitive a owl:DatatypeProperty ;
+    rdfs:label "is competitive"@en ;
+    rdfs:domain foaf:Project ;
+    rdfs:range xsd:boolean .
+
+asio:isGrantedWith a owl:ObjectProperty ;
+    rdfs:label "is granted with"@en ;
+    rdfs:comment "A person is granted with a stipend for researching."@en ;
+    rdfs:domain foaf:Person ;
+    rdfs:range asio:Grant .
+
+asio:isMemberOf a owl:ObjectProperty ;
+    rdfs:label "is member of"@en ;
+    owl:inverseOf foaf:member .
+
+asio:isbn10 a owl:DatatypeProperty ;
+    rdfs:label "has ISBN10"@en ;
+    rdfs:comment "International Standard Book Number (ISBN) 13"@en ;
+    rdfs:domain asio:Book ;
+    rdfs:subPropertyOf asio:identifier .
+
+asio:isbn13 a owl:DatatypeProperty ;
+    rdfs:label "has ISBN13"@en ;
+    rdfs:comment "International Standard Book Number (ISBN) 10"@en ;
+    rdfs:domain asio:Book ;
+    rdfs:subPropertyOf asio:identifier .
+
+asio:issn a owl:DatatypeProperty ;
+    rdfs:label "has ISSN"@en ;
+    rdfs:comment "International Standard Serial Number"@en ;
+    rdfs:subPropertyOf asio:identifier .
+
+asio:mainResearcherParticipant a owl:ObjectProperty ;
+    rdfs:label "main researcher participant"@en ;
+    rdfs:comment "A person is the main researcher in a given project."@en ;
+    rdfs:domain foaf:Person ;
+    rdfs:range foaf:Project .
+
+asio:participant a owl:ObjectProperty ;
+    rdfs:label "participant"@en ;
+    rdfs:domain foaf:Agent .
+
+asio:participates a owl:ObjectProperty ;
+    rdfs:label "participates"@en ;
+    rdfs:comment "This property encodes the participation relation between profiles and the communities they are member of."@en .
+
+asio:patentAssignee a owl:ObjectProperty ;
+    rdfs:label "patent assignee"@en ;
+    rdfs:domain asio:Patent ;
+    rdfs:range foaf:Organization .
+
+asio:patentAssistantExaminer a owl:ObjectProperty ;
+    rdfs:label "patent assistant examiner"@en ;
+    rdfs:domain foaf:Person ;
+    rdfs:range asio:Patent .
+
+asio:patentCountry a owl:ObjectProperty ;
+    rdfs:label "patent country"@en ;
+    rdfs:domain asio:Patent ;
+    rdfs:range asio:Country .
+
+asio:patentDate a owl:DatatypeProperty ;
+    rdfs:label "date of patent"@en ;
+    rdfs:domain asio:Patent ;
+    rdfs:range xsd:date .
+
+asio:patentExpirationDate a owl:DatatypeProperty ;
+    rdfs:label "patent expiration date"@en ;
+    rdfs:domain asio:Patent ;
+    rdfs:range xsd:date .
+
+asio:patentInventor a owl:ObjectProperty ;
+    rdfs:label "patent inventor"@en ;
+    rdfs:domain asio:Patent ;
+    rdfs:range foaf:Person .
+
+asio:patentPrimaryExaminer a owl:ObjectProperty ;
+    rdfs:label "patent primary examiner"@en ;
+    rdfs:domain foaf:Person ;
+    rdfs:range asio:Patent .
+
+asio:patentStatus a owl:ObjectProperty ;
+    rdfs:label "patent status"@en ;
+    rdfs:domain asio:Patent ;
+    rdfs:range asio:Status .
+
+asio:personalizes a owl:ObjectProperty ;
+    rdfs:label "personalizes"@en ;
+    rdfs:comment "A role is personalized by means of a profile, which wrap the role in the identity of the person behind the profile."@en ;
+    rdfs:domain asio:Profile ;
+    rdfs:range asio:Role .
+
+asio:plays a owl:ObjectProperty ;
+    rdfs:label "plays"@en ;
+    rdfs:comment "This property relates roles and their players, who can be any foaf:Agent (a person, a group, etc.)"@en ;
+    rdfs:domain foaf:Agent ;
+    rdfs:range asio:Role .
+
+asio:profiles a owl:ObjectProperty ;
+    rdfs:label "profiles"@en ;
+    rdfs:comment "This property relates people and the featured profiles."@en ;
+    rdfs:domain foaf:Agent ;
+    rdfs:range asio:Profile .
+
+asio:projectAcronym a owl:DatatypeProperty ;
+    rdfs:label "project acronym"@en ;
+    rdfs:domain foaf:Project ;
+    rdfs:range xsd:string .
+
+asio:projectBudget a owl:DatatypeProperty ;
+    rdfs:domain foaf:Project ;
+    rdfs:range xsd:decimal .
+
+asio:projectEndDate a owl:DatatypeProperty ;
+    rdfs:label "project end date"@en,
+        "fecha final proyecto"@es ;
+    rdfs:comment "The end date of the project."@en ;
+    rdfs:domain foaf:Project ;
+    rdfs:range xsd:date .
+
+asio:projectID a owl:DatatypeProperty ;
+    rdfs:label "project ID"@en ;
+    rdfs:domain foaf:Project ;
+    rdfs:range xsd:integer .
+
+asio:projectKeyword a owl:DatatypeProperty ;
+    rdfs:label "project keyword"@en,
+        "palabra clave"@es ;
+    rdfs:comment "A key word of the project."@en ;
+    rdfs:domain foaf:Project ;
+    rdfs:range xsd:string .
+
+asio:projectObjective a owl:DatatypeProperty ;
+    rdfs:label "project objective"@en,
+        "objetivo de proyecto"@es ;
+    rdfs:comment "A defined objective of the project."@en ;
+    rdfs:domain foaf:Project ;
+    rdfs:range xsd:string .
+
+asio:projectOutcome a owl:ObjectProperty ;
+    rdfs:label "project outcome"@en ;
+    rdfs:comment "a property to link a project to any outcome obtained within its endeavour, including publications, patents, products, prototypes, etc. The domain of this property is obviously the class foaf:Project but the range is left open so to encompass unforeseen project outcomes."@en ;
+    rdfs:domain foaf:Project .
+
+asio:projectStartDate a owl:DatatypeProperty ;
+    rdfs:label "project start date"@en,
+        "fecha inicio proyecto"@es ;
+    rdfs:comment "The start date of the project."@en ;
+    rdfs:domain foaf:Project ;
+    rdfs:range xsd:date .
+
+asio:projectStatus a owl:ObjectProperty ;
+    rdfs:label "project status"@en ;
+    rdfs:domain foaf:Project ;
+    rdfs:range asio:Status .
+
+asio:publicationCitation a owl:ObjectProperty ;
+    rdfs:label "publication citations"@en ;
+    rdfs:comment "a property to link a given publication to the number of citations."@en ;
+    rdfs:domain asio:Publication ;
+    rdfs:range asio:QualifiedValue .
+
+asio:publicationDate a owl:DatatypeProperty ;
+    rdfs:label "publication date"@en ;
+    rdfs:range xsd:date .
+
+asio:pubmedcentralid a owl:DatatypeProperty ;
+    rdfs:label "has PubMed Central ID"@en ;
+    rdfs:comment "A PMCID is a unique PubMed Central reference number, which is assigned to each full-text record made available A PMCID is a unique PubMed Central reference number, which is assigned to each full-text record made available in PubMed Central. The PMCID is issued shortly after the PI or author approves the PubMed Central formatted web version of the submission."@en ;
+    rdfs:subPropertyOf asio:identifier .
+
+asio:pubmedid a owl:DatatypeProperty ;
+    rdfs:label "has PubMed ID"@en ;
+    rdfs:comment "The PubMed ID (PMID) identifies a citation record (rather than full-text) in the PubMed database. It is not evidence of compliance with the NIH Public Access Policy, because it does not identify a full-text submission of any kind."@en ;
+    rdfs:subPropertyOf asio:identifier .
+
+asio:qualifieddate a owl:DatatypeProperty ;
+    rdfs:label "qualified date"@en ;
+    rdfs:comment "A given date (point in time) linked to a given value within a qualified value."@en ;
+    rdfs:domain asio:QualifiedValue ;
+    rdfs:range xsd:date .
+
+asio:qualifiedvaluation a owl:DatatypeProperty ;
+    rdfs:label "qualified valuation"@en ;
+    rdfs:comment "A given value linked to a given date (point in time) within a qualified value."@en ;
+    rdfs:domain asio:QualifiedValue ;
+    rdfs:range xsd:string .
+
+asio:referencedLaw a owl:DatatypeProperty ;
+    rdfs:label "reference law"@en ;
+    rdfs:comment "A reference law that establishes a position."@en ;
+    rdfs:domain asio:Role ;
+    rdfs:range xsd:string .
+
+asio:rejected a asio:Status,
+        owl:NamedIndividual ;
+    rdfs:label "Rejected"@en .
+
+asio:requiredFor a owl:ObjectProperty ;
+    rdfs:label "required for"@en ;
+    rdfs:domain asio:AcademicPublication ;
+    rdfs:range asio:AcademicDegree .
+
+asio:requires a owl:ObjectProperty ;
+    rdfs:label "requires"@en ;
+    rdfs:comment "This property relates roles and their requisites, i.e. other roles."@en ;
+    rdfs:domain asio:AcademicDegree,
+        asio:Role ;
+    rdfs:range asio:AcademicPublication,
+        asio:Role .
+
+asio:researchesIn a owl:ObjectProperty ;
+    rdfs:label "researches in"@en ;
+    rdfs:domain foaf:Agent ;
+    rdfs:range modules:ScientificDomain .
+
+asio:reviews a owl:ObjectProperty ;
+    rdfs:label "a proerty to link a person to a publication as a reviewer."@en,
+        "reviews"@en ;
+    rdfs:domain foaf:Person ;
+    rdfs:range asio:Publication .
+
+asio:signed a asio:Status,
+        owl:NamedIndividual ;
+    rdfs:label "Signed"@en .
+
+asio:specializes a owl:ObjectProperty ;
+    rdfs:label "specializes"@en ;
+    rdfs:comment "This property allows to express hierarchies of roles, through of role specialization: if role A specializes role B, and B specializes C, then role A specializes role C."@en ;
+    rdfs:domain asio:Role ;
+    rdfs:range asio:Role .
+
+asio:spinsOffFrom a owl:ObjectProperty ;
+    rdfs:label "spins of from"@en ;
+    rdfs:domain asio:Spinoff .
+
+asio:student a owl:ObjectProperty ;
+    rdfs:label "student"@en ;
+    rdfs:comment "A person studies or studied in a university."@en ;
+    rdfs:domain foaf:Person ;
+    rdfs:range asio:University .
+
+asio:terminated a asio:Status,
+        owl:NamedIndividual ;
+    rdfs:label "Terminated"@en .
+
+asio:unfunded a asio:Status,
+        owl:NamedIndividual ;
+    rdfs:label "Unfunded"@en .
+
+asio:upc a owl:DatatypeProperty ;
+    rdfs:label "Universal Porduct Code"@en,
+        "has UPC"@en ;
+    rdfs:subPropertyOf asio:identifier .
+
+asio:utilizes a owl:ObjectProperty ;
+    rdfs:label "utilizes"@en ;
+    rdfs:domain asio:ResearchContribution ;
+    rdfs:range asio:ResearchMaterial .
+
+asio:yields a owl:ObjectProperty ;
+    rdfs:label "yields"@en ;
+    rdfs:domain asio:ResearchContribution ;
+    rdfs:range asio:ResearchResult .
+
+ro:ResearchObject a owl:Class ;
+    rdfs:label "Objecte de recerca"@ca-ad,
+        "Objecte de recerca"@ca-es,
+        "Research object"@en,
+        "Objeto de investigación"@es,
+        "Objet de recherche"@fr,
+        "Objeto de investigação"@pt ;
+    rdfs:comment "A research object aggregates a number of resources. A resource can be a workflow, web service, document, data item, data set, workflow run, software or a research object."@en ;
+    skos:prefLabel "Objecte de recerca"@ca-ad,
+        "Objecte de recerca"@ca-es,
+        "Research object"@en,
+        "Objeto de investigación"@es,
+        "Objet de recherche"@fr,
+        "Objeto de investigação"@pt .
+
+skos:altLabel a owl:AnnotationProperty .
+
+skos:prefLabel a owl:AnnotationProperty .
+
+<http://www.w3.org/ns/prov#wasDerivedFrom> a owl:ObjectProperty ;
+    rdfs:label "was derived from"@en ;
+    rdfs:comment "A derivation is a transformation of an entity into another, an update of an entity resulting in a new one, or the construction of a new entity based on a pre-existing entity."@en .
+
+<https://www.w3.org/TR/prov-o/#wasDerivedFrom> a owl:ObjectProperty .
+
+asio:Article a owl:Class ;
+    rdfs:label "Article"@en ;
+    rdfs:subClassOf asio:ScientificPublication ;
+    skos:prefLabel "Article"@en .
+
+asio:Budget a owl:Class ;
+    rdfs:label "Pressupost"@ca-ad,
+        "Pressupost"@ca-es,
+        "Budget"@en,
+        "Presupuesto"@es,
+        "Aurrekontu"@eu,
+        "Budget"@fr,
+        "Orzamento"@gl,
+        "Orçamento"@pt ;
+    rdfs:comment "A financial plan for a defined period that may also include planned sales volumes and revenues, resource quantities, costs and expenses, assets, liabilities and cash flows."@en ;
+    rdfs:subClassOf <http://purl.org/cerif/frapo/FinancialEntity> ;
+    skos:altLabel "Presupuesto"@gl ;
+    skos:prefLabel "Pressupost"@ca-ad,
+        "Pressupost"@ca-es,
+        "Budget"@en,
+        "Presupuesto"@es,
+        "Aurrekontu"@eu,
+        "Budget"@fr,
+        "Orzamento"@gl,
+        "Orçamento"@pt .
+
+asio:CV a owl:Class ;
+    rdfs:label "Currículum vitae"@ca-ad,
+        "Currículum vitae"@ca-es,
+        "Currículum vitae"@en,
+        "Currículum vitae"@es,
+        "Curriculum vitae"@eu,
+        "Curriculum vitae"@fr,
+        "Currículum vitae"@gl,
+        "Curriculum vitae"@pt ;
+    rdfs:comment "A document used and created by a person to present their background, skills and accomplishments."@en ;
+    skos:altLabel "CV"@ca,
+        "Curriculum vitae"@ca,
+        "Currículum"@ca,
+        "CV"@en,
+        "Resume"@en,
+        "Résumé"@en,
+        "CV"@es,
+        "Curriculum vitae"@es,
+        "Currículo"@es,
+        "Currículum"@es,
+        "CV"@eu,
+        "CV"@fr,
+        "Curriculum vitæ"@fr,
+        "CV"@gl,
+        "Currículo"@gl,
+        "CV"@pt,
+        "Curriculum vitæ"@pt,
+        "Currículo"@pt ;
+    skos:prefLabel "Currículum vitae"@ca,
+        "Curriculum vitae"@en,
+        "Currículum vitae"@es,
+        "Curriculum vitae"@fr,
+        "Curriculum vitae"@pt .
+
+asio:CollectedDocument a owl:Class ;
+    rdfs:label "Collected document"@en ;
+    rdfs:comment "A document consisting of collections of previously published works."@en ;
+    rdfs:subClassOf asio:ScientificPublication .
+
+asio:Context a owl:Class ;
+    rdfs:label "Context"@ca-es,
+        "Context"@en,
+        "Contexto"@es,
+        "Contexto"@pt ;
+    rdfs:comment "Contexts are similar to situations or state of affairs providing interpretation coordinates for profiles. In the most simple case, these coordinates are just geographical/spatial or temporal coordinates. The ASIO core ontology does not impose a fixed definition of context. It is deliberately wide in order to enable third-parties the adequation of the meaning of context according to their modeling needs and requirements."@en .
+
+asio:Funding a owl:Class ;
+    rdfs:subClassOf <http://purl.org/cerif/frapo/FinancialEntity> .
+
+asio:Grant a owl:Class ;
+    rdfs:label "Grant"@en ;
+    rdfs:comment "A financial award provided by a funding organisation for a particular project or purpose, usually awarded on the basis of a competitive application."@en ;
+    rdfs:subClassOf asio:Funding .
+
+asio:MastersThesis a owl:Class ;
+    rdfs:label "Treball de fi de màster"@ca-ad,
+        "Treball de fi de màster"@ca-es,
+        "Master's thesis"@en,
+        "Tesis de maestría"@es-ar,
+        "Tesis de maestría"@es-co,
+        "Tesis de maestría"@es-cu,
+        "Trabajo de fin de máster"@es-es,
+        "Tesis de maestría"@es-mx,
+        "Mémoire de maîtrise"@fr-ca,
+        "Mémoire de maîtrise"@fr-fr,
+        "Traballo de fin de máster"@gl,
+        "Tese de mestrado"@pt-ao,
+        "Dissertação de mestrado"@pt-br,
+        "Dissertação de mestrado"@pt-pt ;
+    rdfs:comment "A thesis reporting a research project undertaken as part of a second-cycle course of education to receive a master's degree."@en ;
+    rdfs:subClassOf asio:Thesis ;
+    owl:disjointWith asio:PhDThesis ;
+    skos:altLabel "TFM"@ca-ad,
+        "Treball de fi de master"@ca-ad,
+        "Treball de fi de mestratge"@ca-ad,
+        "TFM"@ca-es,
+        "Treball de fi de master"@ca-es,
+        "Treball de fi de mestratge"@ca-es,
+        "TFM"@es-es,
+        "Trabajo de fin de master"@es-es,
+        "MALa"@es-eu,
+        "TFM"@gl,
+        "Traballo de fin de mestrado"@gl ;
+    skos:prefLabel "Treball de fi de màster"@ca-ad,
+        "Treball de fi de màster"@ca-es,
+        "Master's thesis"@en,
+        "Tesis de maestría"@es-ar,
+        "Tesis de maestría"@es-co,
+        "Tesis de maestría"@es-cu,
+        "Trabajo de fin de máster"@es-es,
+        "Tesis de maestría"@es-mx,
+        "Master Amaierako Lana"@eu,
+        "Mémoire de maîtrise"@fr-ca,
+        "Mémoire de maîtrise"@fr-fr,
+        "Traballo de fin de máster"@gl,
+        "Tese de mestrado"@pt-ao,
+        "Dissertação de mestrado"@pt-br,
+        "Dissertação de mestrado"@pt-pt .
+
+asio:Product a owl:Class ;
+    rdfs:label "Product"@en ;
+    rdfs:comment "A product as outcome of a project."@en .
+
+asio:Prototype a owl:Class ;
+    rdfs:label "Prototype"@en ;
+    rdfs:comment "A product prototype"@en ;
+    rdfs:subClassOf asio:Product .
+
+asio:Report a owl:Class ;
+    rdfs:label "Report"@en ;
+    rdfs:comment "A document describing an account or statement describing in detail an event, situation, or the like, usually as the result of observation, inquiry, etc."@en ;
+    rdfs:subClassOf asio:Publication .
+
+asio:ResearchInstitute a owl:Class ;
+    rdfs:label "Centre de recerca"@ca-ad,
+        "Centre d'investigació"@ca-es,
+        "Research institute"@en,
+        "Centro de investigación"@es,
+        "Centre de recherche"@fr,
+        "Centro de investigação"@pt ;
+    rdfs:comment "An establishment founded for doing research."@en ;
+    rdfs:subClassOf foaf:Organization ;
+    skos:prefLabel "Centre de recerca"@ca-ad,
+        "Centre d'investigació"@ca-es,
+        "Research institute"@en,
+        "Centro de investigación"@es,
+        "Centre de recherche"@fr,
+        "Centro de investigação"@pt .
+
+asio:ResearchMaterial a owl:Class ;
+    rdfs:label "Research material"@en ;
+    skos:prefLabel "Research material"@en .
+
+asio:ResearchMethod a owl:Class ;
+    rdfs:label "Research method"@en ;
+    skos:prefLabel "Research method"@en .
+
+asio:ResearchProblem a owl:Class ;
+    rdfs:label "Research problem"@en ;
+    skos:prefLabel "Research problem"@en .
+
+asio:ResearchResult a owl:Class ;
+    rdfs:label "Research result"@en ;
+    skos:prefLabel "Research result"@en .
+
+asio:Spinoff a owl:Class ;
+    rdfs:label "Empresa derivada"@ca-ad,
+        "Empresa derivada"@ca-es,
+        "Corporate spin-off"@en,
+        "Empresa spin-off"@es,
+        "Spin-off enpresa"@eu,
+        "Société scindée"@fr,
+        "Empresa derivada"@pt ;
+    rdfs:comment "A division of a company or an organization that becomes an independent business with assets, employees, intellectual property, technology, or existing products taken from the parent company."@en ;
+    rdfs:subClassOf asio:Company ;
+    skos:prefLabel "Empresa derivada"@ca-ad,
+        "Empresa derivada"@ca-es,
+        "Corporate spin-off"@en,
+        "Empresa spin-off"@es,
+        "Spin-off enpresa"@eu,
+        "Société scindée"@fr,
+        "Empresa derivada"@pt .
+
+asio:hasCode a owl:ObjectProperty ;
+    rdfs:label "has Code"@en ;
+    rdfs:comment "A concept can be asigned a code."@en ;
+    rdfs:domain skos:Concept ;
+    rdfs:range skos:Concept .
+
+asio:isAdvisedBy a owl:ObjectProperty ;
+    rdfs:label "is advised by"@en .
+
+asio:isAuthoredBy a owl:ObjectProperty ;
+    rdfs:label "is authored by"@en .
+
+asio:isFundedBy a owl:ObjectProperty ;
+    rdfs:label "is funded by"@en .
+
+asio:projectCoordinator a owl:ObjectProperty ;
+    rdfs:label "project coordinator"@en ;
+    rdfs:comment "A property to link an agent (person or organisation) with a project in the role of coordinator."@en ;
+    rdfs:domain foaf:Agent ;
+    rdfs:range foaf:Project .
+
+asio:publishedBy a owl:ObjectProperty ;
+    rdfs:label "published by"@en ;
+    rdfs:domain asio:Publication ;
+    rdfs:range foaf:Agent .
+
+modules:ScientificDomain a owl:Class ;
+    rdfs:label "Dominis científics"@ca-ad,
+        "Dominis científics"@ca-es,
+        "Scientific domains"@en,
+        "Áreas científicas"@es,
+        "Domaines scientifiques"@fr,
+        "Áreas científicas"@pt ;
+    rdfs:comment "This ASIO vertical module organizes hierarchically the scientific domains related to research projects as established by Spain's Agencia Estatal de Investigación, depending from the Ministerio de Economía y Competitividad."@en ;
+    rdfs:subClassOf skos:ConceptScheme ;
+    skos:prefLabel "Dominis científics"@ca-ad,
+        "Dominis científics"@ca-es,
+        "Scientific domains"@en,
+        "Áreas científicas"@es,
+        "Domaines scientifiques"@fr,
+        "Áreas científicas"@pt .
+
+foaf:member a owl:ObjectProperty ;
+    rdfs:label "member"@en ;
+    rdfs:domain foaf:Group ;
+    rdfs:range foaf:Agent .
+
+<http://purl.org/NET/c4dm/event.owl#Event> a owl:Class ;
+    rdfs:label "Event"@en ;
+    rdfs:comment """An arbitrary classification of a space/time region, by a
+cognitive agent. An event may have actively participating agents,
+passive factors, products, and a location in space/time."""@en .
+
+asio:Contract a owl:Class ;
+    rdfs:label "Contracte"@ca-ad,
+        "Contracte"@ca-es,
+        "Contract"@en,
+        "Contrato"@es,
+        "Contrat"@fr,
+        "Contrato"@gl,
+        "Contrato"@pt ;
+    rdfs:subClassOf <http://purl.org/cerif/frapo/FinancialEntity> ;
+    skos:prefLabel "Contracte"@ca-ad,
+        "Contracte"@ca-es,
+        "Contract"@en,
+        "Contrato"@es,
+        "Contrat"@fr,
+        "Contrato"@gl,
+        "Contrato"@pt .
+
+asio:Country a owl:Class ;
+    rdfs:label "País"@ca-ad,
+        "País"@ca-es,
+        "Country"@en,
+        "País"@es,
+        "Herrialde"@eu,
+        "Pays"@fr,
+        "País"@pt ;
+    rdfs:comment "A region legally identified as a distinct entity in political geography."@en ;
+    rdfs:subClassOf modules:GeopoliticalEntities ;
+    skos:prefLabel "País"@ca-ad,
+        "País"@ca-es,
+        "Country"@en,
+        "País"@es,
+        "Herrialde"@eu,
+        "Pays"@fr,
+        "País"@gl,
+        "País"@pt .
+
+asio:PhDThesis a owl:Class ;
+    rdfs:label "Tesi doctoral"@ca-ad,
+        "Tesi doctoral"@ca-es,
+        "Doctoral thesis"@en,
+        "Tesis doctoral"@es,
+        "Doktore tesi"@eu,
+        "Thèse doctorale"@fr,
+        "Tese doctoral"@gl,
+        "Tese de doutoramento"@pt ;
+    rdfs:comment "A thesis reporting a research project undertaken as part of an undergraduate course of education to receive a doctoral degree."@en ;
+    rdfs:subClassOf asio:Thesis ;
+    skos:altLabel "Tese de doutoramento"@gl ;
+    skos:prefLabel "Tesi doctoral"@ca-ad,
+        "Tesi doctoral"@ca-es,
+        "Doctoral thesis"@en,
+        "Tesis doctoral"@es,
+        "Doktorego tesi"@eu,
+        "Thèse doctorale"@fr,
+        "Tese doctoral"@gl,
+        "Tese de doutoramento"@pt .
+
+asio:isAwardedBy a owl:FunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:label "is awarded by"@en ;
+    rdfs:range foaf:Agent .
+
+modules:GeopoliticalEntities a owl:Class ;
+    rdfs:label "Entitats geopolítiques"@ca-ad,
+        "Entitats geopolítiques"@ca-es,
+        "Geopolitical entities"@en,
+        "Entidades geopolíticas"@es,
+        "Entités géopolitiques"@fr,
+        "Entidades geopolíticas"@pt ;
+    rdfs:comment "This vertical module in ASIO models all the geopolitical/administrative levels (from municipalities, to provinces, regions, countries and European-level entities) that might have a role in the ontological architecture of the project. It is modeled hierarchically though relevant administrative levels potentially funding projects. In the Asio project the proof of concept is carried out with the whole administrative levels of Spain, Portugal, Andorra and France, in addition to the relevant European administrative entities."@en ;
+    rdfs:subClassOf skos:ConceptScheme .
+
+foaf:Group a owl:Class ;
+    rdfs:subClassOf foaf:Agent .
+
+<http://purl.org/cerif/frapo/FinancialEntity> a owl:Class ;
+    rdfs:label "Ens financera"@ca-ad,
+        "Ens financera"@ca-es,
+        "Financial entity"@en,
+        "Ente financiero"@es,
+        "Entité financière"@fr,
+        "Ente financeiro"@pt ;
+    skos:prefLabel "Ens financera"@ca-ad,
+        "Ens financera"@ca-es,
+        "Financial entity"@en,
+        "Ente financiero"@es,
+        "Entité financière"@fr,
+        "Ente financeiro"@pt .
+
+asio:Book a owl:Class ;
+    rdfs:label "Llibre"@ca-ad,
+        "Llibre"@ca-es,
+        "Book"@en,
+        "Libro"@es,
+        "Livre"@fr,
+        "Livro"@pt ;
+    rdfs:subClassOf asio:ScientificPublication ;
+    skos:prefLabel "Llibre"@ca,
+        "Book"@en,
+        "Libro"@es,
+        "Livre"@fr,
+        "Livro"@pt .
+
+asio:Company a owl:Class ;
+    rdfs:label "Empresa"@ca-ad,
+        "Empresa"@ca-es,
+        "Company"@en,
+        "Empresa"@es,
+        "Entreprise"@fr,
+        "Empresa"@gl,
+        "Empresa"@pt ;
+    rdfs:comment "Una organització amb personalitat jurídica, la qual disposa dels mitjans necessaris per a la producció i es dedica a combinar-los per obtenir béns o serveis destinats a l'intercanvi."@ca,
+        "A corporation or business organization which makes goods (in a broad sense) in an organized manner and sells them to the public for profit."@en,
+        "Una organización con personalidad jurídica que dispone de los medios necesarios para la producción y se dedica a combinarlos para obtener bienes o servicios destinados al intercambio."@es,
+        "Uma organização com personalidade jurídica, a qual dispõe dos médios necessários para a produção e obtenção de bens ou serviços destinados ao intercâmbio."@pt ;
+    rdfs:subClassOf foaf:Organization ;
+    owl:disjointWith asio:University ;
+    skos:prefLabel "Empresa"@ca-ad,
+        "Empresa"@ca-es,
+        "Company"@en,
+        "Empresa"@es,
+        "Entreprise"@fr,
+        "Empresa"@gl,
+        "Empresa"@pt .
+
+asio:Thesis a owl:Class ;
+    rdfs:label "Tesi"@ca-ad,
+        "Tesi"@ca-es,
+        "Thesis"@en,
+        "Tesis"@es,
+        "Tesi"@eu,
+        "Thèse"@fr,
+        "Tese"@gl,
+        "Tese"@pt ;
+    rdfs:comment "Any kind of thesis (bachelor's, master's, PhD) produced to receive some sort of university degree."@en ;
+    rdfs:subClassOf asio:AcademicPublication ;
+    skos:prefLabel "Tesi"@ca-ad,
+        "Tesi"@ca-es,
+        "Thesis"@en,
+        "Tesis"@es,
+        "Tesi"@eu,
+        "Thèse"@fr,
+        "Tese"@gl,
+        "Tese"@pt .
+
+asio:University a owl:Class ;
+    rdfs:label "Universitat"@ca-ad,
+        "Universitat"@ca-es,
+        "University"@en,
+        "Unibertsitate"@eu,
+        "Université"@fr,
+        "Universidade"@gl,
+        "Universidade"@pt ;
+    rdfs:comment "A centre at which higher education and research is conducted."@en ;
+    rdfs:subClassOf foaf:Organization ;
+    skos:prefLabel "Universitat"@ca-ad,
+        "Universitat"@ca-es,
+        "University"@en,
+        "Unibertsitate"@eu,
+        "Université"@fr,
+        "Universidade"@gl,
+        "Universidade"@pt .
+
+asio:Profile a owl:Class ;
+    rdfs:comment "Perfil"@ca-es,
+        "A profile represents a particular person playing a given role. In the specialised literature it is also known as a \"qua-individual\". The ASIO core ontology extends the meaning of profile to capture \"person-as-role\", \"person-at-context\" and \"person-in-community\"."@en,
+        "Profile"@en,
+        "Perfil"@es .
+
+asio:ResearchContribution a owl:Class ;
+    rdfs:label "Research contribution"@en .
+
+skos:ConceptScheme a owl:Class .
+
+asio:AcademicDegree a owl:Class ;
+    rdfs:label "Grau acadèmic"@ca-ad,
+        "Grau acadèmic"@ca-es,
+        "Academic degree"@en,
+        "Título académico"@es-es,
+        "Unibertsitate-gradu"@eu,
+        "Grade universitaire"@fr,
+        "Grade universitaire"@fr-be,
+        "Grade universitaire"@fr-ca,
+        "Grade universitaire"@fr-ch,
+        "Grade universitaire"@fr-fr,
+        "Grao académico"@gl,
+        "Grau acadêmico"@pt-br,
+        "Grau académico"@pt-pt ;
+    rdfs:comment "A qualification awarded to students upon successful completion of a course of study in higher education."@en ;
+    skos:prefLabel "Grau acadèmic"@ca-ad,
+        "Grau acadèmic"@ca-es,
+        "Academic degree"@en,
+        "Título académico"@es-es,
+        "Unibertsitate-gradu"@eu,
+        "Grade universitaire"@fr,
+        "Grade universitaire"@fr-be,
+        "Grade universitaire"@fr-ca,
+        "Grade universitaire"@fr-ch,
+        "Grade universitaire"@fr-fr,
+        "Grao académico"@gl,
+        "Grau acadêmico"@pt-br,
+        "Grau académico"@pt-pt .
+
+foaf:Organization a owl:Class ;
+    rdfs:subClassOf foaf:Agent .
+
+asio:AcademicPublication a owl:Class ;
+    rdfs:label "Publicació acadèmica"@ca-ad,
+        "Publicació acadèmica"@ca-es,
+        "Academic publication"@en,
+        "Publicación académica"@es,
+        "Publication académique"@fr,
+        "Publicación académica"@gl,
+        "Publicação acadêmica"@pt ;
+    rdfs:subClassOf asio:Publication ;
+    skos:prefLabel "Publicació acadèmica"@ca-ad,
+        "Publicació acadèmica"@ca-es,
+        "Academic publication"@en,
+        "Publicación académica"@es,
+        "Publication académique"@fr,
+        "Publicación académica"@gl,
+        "Publicação acadêmica"@pt .
+
+asio:QualifiedValue a owl:Class ;
+    rdfs:label "Qualified value"@en ;
+    rdfs:comment "A class to represent a qualified value as used in Wikibase."@en .
+
+asio:identifier a owl:DatatypeProperty .
+
+xsd:date a rdfs:Datatype .
+
+asio:ScientificPublication a owl:Class ;
+    rdfs:label "Publicació científica"@ca-ad,
+        "Publicació científica"@ca-es,
+        "Scientific publication"@en,
+        "Publicación científica"@es,
+        "Publication scientifique"@fr,
+        "Publicação científica"@pt ;
+    rdfs:subClassOf asio:Publication ;
+    skos:prefLabel "Publicació científica"@ca-ad,
+        "Publicació científica"@ca-es,
+        "Scientific publication"@en,
+        "Publicación científica"@es,
+        "Publication scientifique"@fr,
+        "Publicação científica"@pt .
+
+asio:Patent a owl:Class ;
+    rdfs:label "Patent"@ca-ad,
+        "Patent"@ca-es,
+        "Patent"@en,
+        "Patente"@es,
+        "Patente"@eu,
+        "Patent"@fr,
+        "Patente"@gl,
+        "Patente"@pt ;
+    rdfs:comment "A form of intellectual property that gives its owner the legal right to exclude others from making, using, selling and importing an invention for a limited period of years, in exchange for publishing an enabling public disclosure of the invention."@en ;
+    skos:prefLabel "Patent"@ca,
+        "Patent"@en,
+        "Patente"@es,
+        "Patente"@eu,
+        "Patent"@fr,
+        "Patente"@gl,
+        "Patente"@pt .
+
+skos:Concept a owl:Class .
+
+asio:Status a owl:Class .
+
+foaf:Person a owl:Class ;
+    rdfs:subClassOf foaf:Agent .
+
+asio:Publication a owl:Class ;
+    rdfs:label "Publicació"@ca-ad,
+        "Publicació"@ca-es,
+        "Publication"@en,
+        "Publicación"@es,
+        "Publication"@fr,
+        "Publicación"@gl,
+        "Publicação"@pt ;
+    rdfs:comment "Content made available to the general public. In the case of ASIO, often scientific or academic contents published."@en ;
+    skos:prefLabel "Publicació"@ca-ad,
+        "Publicació"@ca-es,
+        "Publication"@en,
+        "Publicación"@es,
+        "Publication"@fr,
+        "Publicación"@gl,
+        "Publicação"@pt .
+
+foaf:Project a owl:Class ;
+    rdfs:comment "In ASIO, a temporary research endeavor undertaken to achieve defined objectives."@en .
+
+asio:Role a owl:Class ;
+    rdfs:label "Papell"@ca-es,
+        "Role"@en,
+        "Papel"@es,
+        "Papel"@pt ;
+    rdfs:comment "A condition/status/position that can be predicated of a person. In the ASIO core ontology, roles are reified as first order individuals and relations between roles and players are expressed by means of the asio:plays property. The ASIO core ontology does not impose any subclassification of roles. The concept is open to be refined according to domain or application requirements."@en .
+
+foaf:Agent a owl:Class .
+

@@ -5,7 +5,7 @@ from typing import List
 from rdflib.compare import graph_diff, to_isomorphic
 from rdflib.graph import Graph
 
-from wbsync.triplestore import TripleInfo
+from rdfsync.triplestore import TripleInfo
 from . import AdditionOperation, RemovalOperation, SyncOperation
 
 

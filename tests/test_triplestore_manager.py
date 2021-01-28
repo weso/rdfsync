@@ -1,4 +1,4 @@
-from wbsync.triplestore import ModificationResult
+from rdfsync.triplestore import ModificationResult
 
 def test_modification_result():
     msg = "Operation performed succesfully"

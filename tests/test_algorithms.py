@@ -2,11 +2,11 @@ import pytest
 
 from rdflib.namespace import XSD
 
-from wbsync.synchronization import AdditionOperation, RemovalOperation, \
+from rdfsync.synchronization import AdditionOperation, RemovalOperation, \
                                           GraphDiffSyncAlgorithm, NaiveSyncAlgorithm, \
                                           RDFSyncAlgorithm
-from wbsync.triplestore import LiteralElement, URIElement
-from wbsync.util.uri_constants import RDFS_COMMENT, RDFS_LABEL, RDFS_SUBCLASSOF, \
+from rdfsync.triplestore import LiteralElement, URIElement
+from rdfsync.util.uri_constants import RDFS_COMMENT, RDFS_LABEL, RDFS_SUBCLASSOF, \
                                              RDF_TYPE, OWL_CLASS, OWL_DISJOINT_WITH
 
 from .common import load_file_from

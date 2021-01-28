@@ -2,10 +2,10 @@ from unittest import mock
 
 import pytest
 
-from wbsync.synchronization import AdditionOperation, BatchOperation, RemovalOperation
-from wbsync.synchronization.operations import optimize_ops
-from wbsync.triplestore import LiteralElement, TripleInfo, URIElement
-from wbsync.util.uri_constants import RDFS_LABEL
+from rdfsync.synchronization import AdditionOperation, BatchOperation, RemovalOperation
+from rdfsync.synchronization.operations import optimize_ops
+from rdfsync.triplestore import LiteralElement, TripleInfo, URIElement
+from rdfsync.util.uri_constants import RDFS_LABEL
 
 
 @pytest.fixture

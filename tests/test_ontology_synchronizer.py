@@ -5,11 +5,11 @@ import ontospy
 
 from unittest import mock
 
-from wbsync.synchronization import OntologySynchronizer, GraphDiffSyncAlgorithm, \
+from rdfsync.synchronization import OntologySynchronizer, GraphDiffSyncAlgorithm, \
                                           NaiveSyncAlgorithm, AdditionOperation, RemovalOperation
-from wbsync.synchronization.ontology_synchronizer import _filter_invalid_ops
-from wbsync.triplestore import LiteralElement, URIElement
-from wbsync.util.uri_constants import OWL_BASE
+from rdfsync.synchronization.ontology_synchronizer import _filter_invalid_ops
+from rdfsync.triplestore import LiteralElement, URIElement
+from rdfsync.util.uri_constants import OWL_BASE
 
 from .common import load_file_from
 

@@ -6,11 +6,11 @@ with open(path.join(curr_dir, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='wb2rdf',
+    name='rdfsync',
     version='0.0.1',
-    packages=['wbsync', 'wbsync.external', 'wbsync.synchronization',
-              'wbsync.triplestore', 'wbsync.util', 'wbsync.githubcon', 'wbsync.rdfsync'],
-    url='https://github.com/weso/wb2rdf',
+    packages=['rdfsync', 'rdfsync.external', 'rdfsync.synchronization',
+              'rdfsync.triplestore', 'rdfsync.util', 'rdfsync.githubcon', 'rdfsync.wb2rdf'],
+    url='https://github.com/weso/rdfsync',
     license='MIT',
     author='Othmane Bakhtaoui',
     author_email='uo259323@uniovi.es',

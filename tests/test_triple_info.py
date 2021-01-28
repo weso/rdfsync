@@ -4,9 +4,9 @@ from rdflib.term import BNode, Literal, URIRef
 from rdflib.namespace import XSD
 from wikidataintegrator.wdi_core import WDItemID, WDProperty, WDString, WDQuantity, WDMonolingualText
 
-from wbsync.triplestore import AnonymousElement, LiteralElement, TripleElement, TripleInfo, URIElement
-from wbsync.util.error import InvalidArgumentError
-from wbsync.util.uri_constants import ASIO_BASE, GEO_BASE
+from rdfsync.triplestore import AnonymousElement, LiteralElement, TripleElement, TripleInfo, URIElement
+from rdfsync.util.error import InvalidArgumentError
+from rdfsync.util.uri_constants import ASIO_BASE, GEO_BASE
 
 
 @pytest.fixture()

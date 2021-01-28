@@ -1,5 +1,5 @@
-from wbsync.triplestore import WikibaseAdapter
-from wbsync.synchronization import GraphDiffSyncAlgorithm, OntologySynchronizer
+from rdfsync.triplestore import WikibaseAdapter
+from rdfsync.synchronization import GraphDiffSyncAlgorithm, OntologySynchronizer
 from secret import WIKIBASE_USERNAME, WIKIBASE_PASSWORD, MEDIAWIKI_API_URL, SPARQL_ENDPOINT_URL, RDF_FILE
 
 mediawiki_api_url = MEDIAWIKI_API_URL

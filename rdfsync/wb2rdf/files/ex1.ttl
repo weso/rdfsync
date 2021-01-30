@@ -6,7 +6,7 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
 
-ex:AdministrativePersonnel rdf:type owl:Class ;
+ex:AdministrativePersonnel rdf:type  owl:Class ;
                            rdfs:subClassOf  ex:HumanResource ;
                            owl:disjointWith ex:ResearchPersonnel .
 

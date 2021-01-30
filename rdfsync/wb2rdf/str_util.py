@@ -14,3 +14,4 @@ def get_triple_object_str(object):
     object_to_string = str(object).rsplit("/", 1)[-1]
     obj_name = object_to_string.rpartition("#")[2]
     return obj_name
+

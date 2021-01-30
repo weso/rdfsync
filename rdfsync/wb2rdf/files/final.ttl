@@ -1,8 +1,11 @@
 @prefix ex: <http://www.purl.org/hercules/asio/core#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ns: <http://example.com/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+ns:Aaa a ns:Xxx .
 
 ex:AdministrativePersonnel a owl:Class ;
     rdfs:subClassOf ex:HumanResource ;

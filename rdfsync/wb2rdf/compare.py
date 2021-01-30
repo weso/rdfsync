@@ -1,5 +1,6 @@
 from rdflib import Graph
 from rdflib.compare import to_isomorphic, graph_diff
+from rdflib.namespace import NamespaceManager, RDF, Namespace
 from str_util import *
 
 def dump_nt_sorted(g):
@@ -42,10 +43,10 @@ in_both, in_first, in_second = graph_diff(iso1, iso2)
 #     if get_triple_subject_str(subject) == "ResearchPersonnel":
 #         print(get_triple_predicate_str(predicate))
 #         print(get_triple_object_str(object))
-
-dump_nt_sorted(g1)
-
-g1.serialize(destination='files/final.ttl', format='ttl')
+NS = Namespace("http://example.com/")
+g1.add((NS.Aaa, RDF.type, NS.Xxx))
+g1.bind("ns", NS)
+g1.serialize(destination='files/final.ttl', format="ttl")
 
 
 

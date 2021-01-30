@@ -1,6 +1,6 @@
-from rdflib import Graph, URIRef
+from rdflib import Graph
 from rdflib.compare import to_isomorphic, graph_diff
-
+from str_util import *
 
 def dump_nt_sorted(g):
     for l in sorted(g.serialize(format='nt').splitlines()):
@@ -30,14 +30,23 @@ in_both, in_first, in_second = graph_diff(iso1, iso2)
 # updating the first file from the changed made on the second copy
 # final_result = g2 - g1 # changes in g2 not seen in g1
 
-for subject, predicate, object in g1:
-    if not (subject, predicate, object) in g2:
-        # g1.add((subject, predicate, object))
-        # subject_to_string = str(subject).rsplit("/", 1)[-1]
-        # subject_name = subject_to_string.rpartition("#")[2]
-        # print(subject_name)
-        g2.add((subject, predicate, object))
+# for subject, predicate, object in g1:
+#     if not (subject, predicate, object) in g2:
+#         # g1.add((subject, predicate, object))
+#         # subject_to_string = str(subject).rsplit("/", 1)[-1]
+#         # subject_name = subject_to_string.rpartition("#")[2]
+#         # print(subject_name)
+#         g2.add((subject, predicate, object))
 
-g1.bind('rdf', URIRef('http://www.w3.org/1999/02/22-rdf-syntax-ns#'))
+# for subject, predicate, object in g1:
+#     if get_triple_subject_str(subject) == "ResearchPersonnel":
+#         print(get_triple_predicate_str(predicate))
+#         print(get_triple_object_str(object))
+
+dump_nt_sorted(g1)
+
 g1.serialize(destination='files/final.ttl', format='ttl')
+
+
+
 

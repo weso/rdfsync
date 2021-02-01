@@ -3,6 +3,7 @@ from secret import MEDIAWIKI_API_URL
 from rdflib import Graph
 from str_util import *
 from rdflib import URIRef, BNode, Literal
+from collections import OrderedDict
 
 API_ENDPOINT = MEDIAWIKI_API_URL
 item_to_search = 'Q1'
@@ -66,6 +67,19 @@ def get_related_link_of_a_wb_item_or_property(id):
     return rl
 
 
+def get_related_link_of_values_of_a_claim_in_wb(claim_id):
+    rl = []
+    data = requests.get(API_ENDPOINT, params=get_params_of_wbgetclaims(claim_id))
+    for property in data.json()['claims']:
+        req = wbgetentity(property)
+        if get_labels_of_item_or_property(req, property)['en']['value'] != 'related link' and \
+                get_labels_of_item_or_property(req, property)['en']['value'] != 'same as':
+            link = get_related_link_of_a_wb_item_or_property(
+                data.json()['claims'][property][0]['mainsnak']['datavalue']['value']['id'])
+            rl.append(link)
+    return rl
+
+
 # # basic item info
 # r = wbgetentity(item_to_search)
 # # labels
@@ -88,19 +102,71 @@ def get_related_link_of_a_wb_item_or_property(id):
 
 # wbgetclaims(item_to_search)
 
-
-subject_rl = get_related_link_of_a_wb_item_or_property('Q1')
-subject_of_item = get_triple_subject_str(subject_rl)
 # print(subject_rl)
 
 g1 = Graph()
+# g1.parse("https://raw.githubusercontent.com/weso/rdfsync/rdfsync/rdfsync/wb2rdf/files/ex1.ttl", format="ttl")
 g1.parse("files/ex1.ttl", format="ttl")
 
-for subject, predicate, object in g1:
-    if str(subject) == str(subject_rl):
-        print(predicate, object)
-        pr_to_add = URIRef(get_related_link_of_a_wb_item_or_property('P4'))
-        obj_to_add = URIRef(get_related_link_of_a_wb_item_or_property('Q6'))
-        g1.add((subject, pr_to_add, obj_to_add))
 
-g1.serialize(destination='files/final.ttl', format="ttl")
+def compare(graph, id):
+    # subject info
+    subject_rl = get_related_link_of_a_wb_item_or_property(id)
+    subject_name = get_triple_subject_str(subject_rl)
+    # subject properties in rdf
+    predicates_of_subject = []
+    objects_of_subject = []
+
+    # subject properties in rdf
+    claims_of_wb_item = []
+    value_of_claims = []
+    # _______________________ SUBJECT RDF DATA ____________________#
+    # getting the predicates in the graph for the subject searched
+    for subject, predicate, object in graph:
+        if str(subject) == str(subject_rl):
+            predicates_of_subject.append(str(predicate))
+            objects_of_subject.append(str(object))
+    predicate_and_object_dictionary = get_ordered_dictionary(predicates_of_subject, objects_of_subject)
+    # _______________________                  ____________________#
+
+    # _______________________ SUBJECT WIKIBASE DATA ____________________#
+    # copying claims of item in wikibase
+    for claim in wbgetclaims(id):
+        claims_of_wb_item.append(str(get_related_link_of_a_wb_item_or_property(claim)))
+    # copying value of claims of item in wikibase which is the object in rdf
+    value_of_claims = get_related_link_of_values_of_a_claim_in_wb(id)
+    claim_and_value_dictionary = get_ordered_dictionary(claims_of_wb_item, value_of_claims)
+    # _______________________                  ____________________#
+
+    claims_of_wb_item.sort()
+    predicates_of_subject.sort()
+    # comparing predicates
+    if claims_of_wb_item != predicates_of_subject:
+        # existing in wikibase and not ttl file
+        set_of_predicates = set(predicates_of_subject)
+        differences = [x for x in claims_of_wb_item if x not in set_of_predicates]
+        print(differences)
+        # TODO: later
+    else:
+        print('same predicates in the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
+        print('comparing the objects in rdf to claim values in wikibase')
+        diff_objects_set = claim_and_value_dictionary.items() ^ predicate_and_object_dictionary.items()
+        if len(diff_objects_set) == 0:
+            print('same objects in the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
+        else:
+            print('different objects in the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
+            for claim in claim_and_value_dictionary.keys():
+                # updating the graph with the new value of the object
+                if claim in predicate_and_object_dictionary.keys():
+                    if str(predicate_and_object_dictionary[claim]) != str(claim_and_value_dictionary[claim]):
+                        graph.set((URIRef(subject_rl), URIRef(claim), URIRef(claim_and_value_dictionary[claim])))
+
+
+def get_ordered_dictionary(keys, values):
+    unordered_dict = dict(zip(keys, values))
+    return dict(sorted(unordered_dict.items()))
+
+
+compare(g1, 'Q3')
+# print()
+g1.serialize(destination='files/final3.ttl', format="ttl")

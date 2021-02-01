@@ -31,21 +31,22 @@ in_both, in_first, in_second = graph_diff(iso1, iso2)
 # updating the first file from the changed made on the second copy
 # final_result = g2 - g1 # changes in g2 not seen in g1
 
-# for subject, predicate, object in g1:
-#     if not (subject, predicate, object) in g2:
-#         # g1.add((subject, predicate, object))
-#         # subject_to_string = str(subject).rsplit("/", 1)[-1]
-#         # subject_name = subject_to_string.rpartition("#")[2]
-#         # print(subject_name)
-#         g2.add((subject, predicate, object))
+for subject, predicate, object in g1:
+    if not (subject, predicate, object) in g2:
+        # g1.add((subject, predicate, object))
+        print(subject)
+        # subject_to_string = str(subject).rsplit("/", 1)[-1]
+        # subject_name = subject_to_string.rpartition("#")[2]
+        # print(subject_name)
+        g2.add((subject, predicate, object))
 
 # for subject, predicate, object in g1:
 #     if get_triple_subject_str(subject) == "ResearchPersonnel":
 #         print(get_triple_predicate_str(predicate))
 #         print(get_triple_object_str(object))
-NS = Namespace("http://example.com/")
-g1.add((NS.Aaa, RDF.type, NS.Xxx))
-g1.bind("ns", NS)
+# NS = Namespace("http://example.com/")
+# g1.add((NS.Aaa, RDF.type, NS.Xxx))
+# g1.bind("ns", NS)
 g1.serialize(destination='files/final.ttl', format="ttl")
 
 

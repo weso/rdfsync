@@ -1,6 +1,6 @@
 from rdflib import Graph
 from rdflib.compare import to_isomorphic, graph_diff
-from rdflib.namespace import NamespaceManager, RDF, Namespace
+from rdflib.namespace import NamespaceManager, RDF, Namespace, RDFS
 from str_util import *
 
 def dump_nt_sorted(g):
@@ -31,14 +31,12 @@ in_both, in_first, in_second = graph_diff(iso1, iso2)
 # updating the first file from the changed made on the second copy
 # final_result = g2 - g1 # changes in g2 not seen in g1
 
-for subject, predicate, object in g1:
-    if not (subject, predicate, object) in g2:
-        # g1.add((subject, predicate, object))
-        print(subject)
-        # subject_to_string = str(subject).rsplit("/", 1)[-1]
-        # subject_name = subject_to_string.rpartition("#")[2]
-        # print(subject_name)
-        g2.add((subject, predicate, object))
+# for subject, predicate, object in g1:
+#         # g1.add((subject, predicate, object))
+#         print(subject, predicate, object)
+#         # subject_to_string = str(subject).rsplit("/", 1)[-1]
+#         # subject_name = subject_to_string.rpartition("#")[2]
+#         # print(subject_name)
 
 # for subject, predicate, object in g1:
 #     if get_triple_subject_str(subject) == "ResearchPersonnel":
@@ -47,7 +45,6 @@ for subject, predicate, object in g1:
 # NS = Namespace("http://example.com/")
 # g1.add((NS.Aaa, RDF.type, NS.Xxx))
 # g1.bind("ns", NS)
-g1.serialize(destination='files/final.ttl', format="ttl")
 
 
 

@@ -1,8 +1,9 @@
 import requests
+import re
 from secret import MEDIAWIKI_API_URL
-from rdflib import Graph
+from rdflib import Graph, RDFS
 from str_util import *
-from rdflib import URIRef, BNode, Literal
+from rdflib import URIRef, XSD, Literal
 from collections import OrderedDict
 
 API_ENDPOINT = MEDIAWIKI_API_URL
@@ -41,20 +42,32 @@ def wbgetclaims(id):
     return claims
 
 
+def get_information_of_item_or_property_as_dictionary(id, information):
+    languages = []
+    values = []
+    request = wbgetentity(id)
+    data = request.json()['entities'][id][information]
+    for lang in data:
+        languages.append(lang)
+        values.append(data[lang]['value'])
+    language_value_dict = get_ordered_dictionary(languages, values)
+    return language_value_dict
+
+
 def get_information_of_item_or_property(request, id, information):
     return request.json()['entities'][id][information]
 
 
 def get_labels_of_item_or_property(request, id):
-    return get_information_of_item_or_property(request, id, "labels")
+    return get_information_of_item_or_property(request, id, 'labels')
 
 
 def get_descriptions_of_item_or_property(request, id):
-    return get_information_of_item_or_property(request, id, "descriptions")
+    return get_information_of_item_or_property(request, id, 'descriptions')
 
 
 def get_aliases_of_item_or_property(request, id):
-    return get_information_of_item_or_property(request, id, "aliases")
+    return get_information_of_item_or_property(request, id, 'aliases')
 
 
 def get_related_link_of_a_wb_item_or_property(id):
@@ -110,14 +123,20 @@ g1.parse("files/ex1.ttl", format="ttl")
 
 
 def compare(graph, id):
+    pattern = re.compile(r'\s+')  # no spaces
     # subject info
     subject_rl = get_related_link_of_a_wb_item_or_property(id)
-    subject_name = get_triple_subject_str(subject_rl)
+    subject_name = re.sub(pattern, '', get_triple_subject_str(subject_rl))
+
+    # labels
+    labels_of_subject_rdf = dict()
+    descriptions_of_subject_rdf = dict()
+
     # subject properties in rdf
     predicates_of_subject = []
     objects_of_subject = []
 
-    # subject properties in rdf
+    # subject properties in wb
     claims_of_wb_item = []
     value_of_claims = []
     # _______________________ SUBJECT RDF DATA ____________________#
@@ -126,6 +145,14 @@ def compare(graph, id):
         if str(subject) == str(subject_rl):
             predicates_of_subject.append(str(predicate))
             objects_of_subject.append(str(object))
+            if str(get_triple_predicate_str(predicate)) == 'label':
+                language_of_label = repr(object).split("lang='")[1].split("')")[0]
+                labels_of_subject_rdf[language_of_label] = str(object)
+            if str(get_triple_predicate_str(predicate)) == 'comment':
+                language_of_descr = repr(object).split("lang='")[1].split("')")[0]
+                descriptions_of_subject_rdf[language_of_descr] = str(object)
+
+            # print(repr(object))
     predicate_and_object_dictionary = get_ordered_dictionary(predicates_of_subject, objects_of_subject)
     # _______________________                  ____________________#
 
@@ -138,10 +165,26 @@ def compare(graph, id):
     claim_and_value_dictionary = get_ordered_dictionary(claims_of_wb_item, value_of_claims)
     # _______________________                  ____________________#
 
+    # comparing labels
+    labels_of_subject_wb = get_information_of_item_or_property_as_dictionary(id, 'labels')
+    for lang in labels_of_subject_wb.keys():
+        graph.set((URIRef(subject_rl), RDFS.label, Literal(labels_of_subject_wb[lang], lang=lang)))
+
+    # comparing descriptions
+    descriptions_of_subject_wb = get_information_of_item_or_property_as_dictionary(id, 'descriptions')
+    if not bool(descriptions_of_subject_wb):
+        print('there are no descriptions in wb. updating the rdf')
+        graph.remove((URIRef(subject_rl), RDFS.comment, None))
+    else:
+        for lang in descriptions_of_subject_wb.keys():
+            print(descriptions_of_subject_wb[lang] + "ho")
+            graph.set((URIRef(subject_rl), RDFS.comment, Literal(descriptions_of_subject_rdf[lang], lang=lang)))
+
     claims_of_wb_item.sort()
     predicates_of_subject.sort()
     # comparing predicates
     if claims_of_wb_item != predicates_of_subject:
+        print('different predicates in the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
         # existing in wikibase and not ttl file
         set_of_predicates = set(predicates_of_subject)
         differences = [x for x in claims_of_wb_item if x not in set_of_predicates]
@@ -167,6 +210,12 @@ def get_ordered_dictionary(keys, values):
     return dict(sorted(unordered_dict.items()))
 
 
-compare(g1, 'Q3')
-# print()
+compare(g1, 'P4')
+# # print()
 g1.serialize(destination='files/final3.ttl', format="ttl")
+
+# r = wbgetentity(item_to_search)
+# # # labels
+# print(get_aliases_of_item_or_property(r, item_to_search))
+# # descriptions
+# print(get_descriptions_of_item_or_property(r, item_to_search))

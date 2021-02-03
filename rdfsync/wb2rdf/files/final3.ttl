@@ -23,8 +23,8 @@ ex:capital a owl:ObjectProperty ;
     rdfs:domain skos:Concept ;
     rdfs:range skos:Concept .
 
-ex:HumanResource a owl:Class .
-
 ex:ResearchPersonnel a owl:Class ;
-    rdfs:subClassOf ex:isAwardedBy .
+    rdfs:subClassOf ex:HumanResource .
+
+ex:HumanResource a owl:Class .
 

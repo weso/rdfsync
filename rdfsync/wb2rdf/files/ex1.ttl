@@ -22,7 +22,10 @@ ex:capital rdf:type owl:ObjectProperty ;
              rdfs:domain skos:Concept ;
              rdfs:range skos:Concept ;
              rdfs:comment "A property to indicate that a place is the official seat of government in a political entity."@en ;
-             rdfs:label "capital"@en .
+             rdfs:label "capitals"@es ;
+             rdfs:label "capitaleeeeees"@en .
+
+
 
 ex:awards rdf:type owl:ObjectProperty ;
             owl:inverseOf ex:isAwardedBy ;

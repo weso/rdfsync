@@ -43,14 +43,14 @@ def wbgetclaims(id):
 
 
 def get_information_of_item_or_property_as_dictionary(id, information):
-    languages = []
-    values = []
+    language_value_dict = dict()
     request = wbgetentity(id)
     data = request.json()['entities'][id][information]
     for lang in data:
-        languages.append(lang)
-        values.append(data[lang]['value'])
-    language_value_dict = get_ordered_dictionary(languages, values)
+        def_lang = lang
+        if str(lang) == str('es-formal'):
+            def_lang = 'es'
+        language_value_dict[def_lang] = data[lang]['value']
     return language_value_dict
 
 
@@ -145,6 +145,7 @@ def compare(graph, id):
         if str(subject) == str(subject_rl):
             predicates_of_subject.append(str(predicate))
             objects_of_subject.append(str(object))
+            # labels and comments ( label and description in wb)
             if str(get_triple_predicate_str(predicate)) == 'label':
                 language_of_label = repr(object).split("lang='")[1].split("')")[0]
                 labels_of_subject_rdf[language_of_label] = str(object)
@@ -152,7 +153,6 @@ def compare(graph, id):
                 language_of_descr = repr(object).split("lang='")[1].split("')")[0]
                 descriptions_of_subject_rdf[language_of_descr] = str(object)
 
-            # print(repr(object))
     predicate_and_object_dictionary = get_ordered_dictionary(predicates_of_subject, objects_of_subject)
     # _______________________                  ____________________#
 
@@ -165,21 +165,37 @@ def compare(graph, id):
     claim_and_value_dictionary = get_ordered_dictionary(claims_of_wb_item, value_of_claims)
     # _______________________                  ____________________#
 
+    # _______________________ LABELS ____________________#
     # comparing labels
     labels_of_subject_wb = get_information_of_item_or_property_as_dictionary(id, 'labels')
-    for lang in labels_of_subject_wb.keys():
-        graph.set((URIRef(subject_rl), RDFS.label, Literal(labels_of_subject_wb[lang], lang=lang)))
+    for label_lang in labels_of_subject_wb.keys():
+        # same lang of label, different values
+        if label_lang in labels_of_subject_rdf.keys():
+            if str(labels_of_subject_wb[label_lang]) != str(labels_of_subject_rdf[label_lang]):
+                graph.set((URIRef(subject_rl), RDFS.label, Literal(labels_of_subject_wb[label_lang], lang=label_lang)))
+        # new lang of label not in rdf but is in wb
+        else:
+            graph.add((URIRef(subject_rl), RDFS.label, Literal(labels_of_subject_wb[label_lang], lang=label_lang)))
+    # _______________________                  ____________________#
 
+    # _______________________ DESCRIPTIONS ____________________#
     # comparing descriptions
     descriptions_of_subject_wb = get_information_of_item_or_property_as_dictionary(id, 'descriptions')
     if not bool(descriptions_of_subject_wb):
         print('there are no descriptions in wb. updating the rdf')
         graph.remove((URIRef(subject_rl), RDFS.comment, None))
     else:
-        for lang in descriptions_of_subject_wb.keys():
-            print(descriptions_of_subject_wb[lang] + "ho")
-            graph.set((URIRef(subject_rl), RDFS.comment, Literal(descriptions_of_subject_rdf[lang], lang=lang)))
+        for descr_lang in descriptions_of_subject_wb.keys():
+            # same lang of description, different values
+            if descr_lang in descriptions_of_subject_rdf.keys():
+                if str(descriptions_of_subject_wb[descr_lang]) != str(descriptions_of_subject_rdf[descr_lang]):
+                    graph.set((URIRef(subject_rl), RDFS.comment, Literal(descriptions_of_subject_wb[descr_lang], lang=descr_lang)))
+            # new lang of description not in rdf but is in wb
+            else:
+                graph.add((URIRef(subject_rl), RDFS.comment, Literal(descriptions_of_subject_wb[descr_lang], lang=descr_lang)))
+    # _______________________                  ____________________#
 
+    # _______________________ PREDICATES and OBJECTS / CLAIMS ____________________#
     claims_of_wb_item.sort()
     predicates_of_subject.sort()
     # comparing predicates
@@ -211,7 +227,6 @@ def get_ordered_dictionary(keys, values):
 
 
 compare(g1, 'P4')
-# # print()
 g1.serialize(destination='files/final3.ttl', format="ttl")
 
 # r = wbgetentity(item_to_search)
@@ -219,3 +234,4 @@ g1.serialize(destination='files/final3.ttl', format="ttl")
 # print(get_aliases_of_item_or_property(r, item_to_search))
 # # descriptions
 # print(get_descriptions_of_item_or_property(r, item_to_search))
+# print(get_information_of_item_or_property_as_dictionary('P4', 'labels'))

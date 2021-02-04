@@ -206,8 +206,13 @@ def compare(graph, id):
         print('different predicates in the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
         # existing in wikibase and not ttl file
         set_of_predicates = set(predicates_of_subject)
-        differences = [x for x in claims_of_wb_item if x not in set_of_predicates]
-        print(differences)
+        predicates_in_rdf_not_in_wb = [x for x in set_of_predicates if x not in claims_of_wb_item]
+        # deletion: predicate exists in rdf but is not in wb.
+        if len(predicates_in_rdf_not_in_wb) != 0:
+            for predicate_to_delete in predicates_in_rdf_not_in_wb:
+                print('deletion of <' + str(get_triple_predicate_str(
+                    predicate_to_delete)) + '> in rdf because predicate exists in rdf but is not in wb.')
+                graph.remove((URIRef(subject_rl), URIRef(predicate_to_delete), None))
         # TODO: later
     else:
         print('same predicates in the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
@@ -229,7 +234,7 @@ def get_ordered_dictionary(keys, values):
     return dict(sorted(unordered_dict.items()))
 
 
-compare(g1, 'P4')
+compare(g1, 'Q6')
 g1.serialize(destination='files/final3.ttl', format="ttl")
 
 # r = wbgetentity(item_to_search)

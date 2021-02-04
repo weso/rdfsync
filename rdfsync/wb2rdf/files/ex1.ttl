@@ -7,8 +7,9 @@
 
 
 ex:AdministrativePersonnel
-    rdf:type         owl:Class ;
-    rdfs:subClassOf  ex:HumanResource ;
+    rdfs:label "AdministrativePersonnel"@en ;
+    rdfs:domain ex:isAwardedBy ;
+    rdfs:subClassOf ex:HumanResource ;
     owl:disjointWith ex:ResearchPersonnel .
 
 ex:HumanResource

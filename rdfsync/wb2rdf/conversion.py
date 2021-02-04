@@ -81,17 +81,23 @@ def get_related_link_of_a_wb_item_or_property(id):
 
 
 def get_related_link_of_values_of_a_claim_in_wb(claim_id):
-    rl = []
+    claim_with_its_values = dict()
     data = requests.get(API_ENDPOINT, params=get_params_of_wbgetclaims(claim_id))
     for property in data.json()['claims']:
         req = wbgetentity(property)
+        rl_of_claim = get_related_link_of_a_wb_item_or_property(property)
         if get_labels_of_item_or_property(req, property)['en']['value'] != 'related link' and \
                 get_labels_of_item_or_property(req, property)['en']['value'] != 'same as':
-            # TODO: change 0 to loop
-            link = get_related_link_of_a_wb_item_or_property(
-                data.json()['claims'][property][0]['mainsnak']['datavalue']['value']['id'])
-            rl.append(link)
-    return rl
+            # TODO:
+            index = 0
+            rl_claim_values = []
+            while index < len(data.json()['claims'][property]):
+                link = get_related_link_of_a_wb_item_or_property(
+                    data.json()['claims'][property][index]['mainsnak']['datavalue']['value']['id'])
+                rl_claim_values.append(link)
+                index += 1
+            claim_with_its_values[rl_of_claim] = rl_claim_values
+    return claim_with_its_values
 
 
 # # basic item info
@@ -163,9 +169,12 @@ def compare(graph, id):
     # copying claims of item in wikibase
     for claim in wbgetclaims(id):
         claims_of_wb_item.append(str(get_related_link_of_a_wb_item_or_property(claim)))
-    # copying value of claims of item in wikibase which is the object in rdf
-    value_of_claims = get_related_link_of_values_of_a_claim_in_wb(id)
-    claim_and_value_dictionary = get_ordered_dictionary(claims_of_wb_item, value_of_claims)
+    # TODO:
+    claim_and_value_dictionary = get_related_link_of_values_of_a_claim_in_wb(id)
+    print('@@@@@@@@@@@@@@@@@@@@')
+    print(claim_and_value_dictionary)
+    print('@@@@@@@@@@@@@@@@@@@@')
+
     # _______________________                  ____________________#
 
     # _______________________ LABELS ____________________#
@@ -219,7 +228,6 @@ def compare(graph, id):
                 print('deletion of <' + str(get_triple_predicate_str(
                     predicate_to_delete)) + '> in rdf because predicate exists in rdf but is not in wb.')
                 graph.remove((URIRef(subject_rl), URIRef(predicate_to_delete), None))
-        # TODO: later
         # addition: predicate exists in rdf but is not in wb.
         set_of_claims = set(claims_of_wb_item)
         predicates_in_wb_not_in_rdf = [x for x in set_of_claims if x not in predicates_of_subject]
@@ -227,9 +235,11 @@ def compare(graph, id):
             for predicate_to_add in predicates_in_wb_not_in_rdf:
                 print('addition of <' + str(get_triple_predicate_str(
                     predicate_to_add)) + '> in rdf because predicate exists in wb but is not in rdf.')
-                graph.add((URIRef(subject_rl), URIRef(predicate_to_add),
-                           URIRef(claim_and_value_dictionary[predicate_to_add])))
-
+                # TODO:
+                for index, item in enumerate(claim_and_value_dictionary[predicate_to_add]):
+                    print(index, item)
+                    graph.add((URIRef(subject_rl), URIRef(predicate_to_add),
+                               URIRef(item)))
 
     else:
         print('same predicates in the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')

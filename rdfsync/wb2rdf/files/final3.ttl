@@ -4,7 +4,8 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
-ex:AdministrativePersonnel a owl:Class ;
+ex:AdministrativePersonnel a ex:isAwardedBy,
+        owl:Class ;
     rdfs:label "AdministrativePersonnel"@en ;
     rdfs:domain ex:isAwardedBy ;
     rdfs:range owl:Class ;

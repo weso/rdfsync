@@ -6,6 +6,8 @@
 
 ex:AdministrativePersonnel a owl:Class ;
     rdfs:label "AdministrativePersonnel"@en ;
+    rdfs:domain ex:isAwardedBy ;
+    rdfs:range owl:Class ;
     rdfs:subClassOf ex:HumanResource ;
     owl:disjointWith ex:ResearchPersonnel .
 

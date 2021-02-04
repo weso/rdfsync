@@ -87,6 +87,7 @@ def get_related_link_of_values_of_a_claim_in_wb(claim_id):
         req = wbgetentity(property)
         if get_labels_of_item_or_property(req, property)['en']['value'] != 'related link' and \
                 get_labels_of_item_or_property(req, property)['en']['value'] != 'same as':
+            # TODO: change 0 to loop
             link = get_related_link_of_a_wb_item_or_property(
                 data.json()['claims'][property][0]['mainsnak']['datavalue']['value']['id'])
             rl.append(link)
@@ -127,6 +128,7 @@ def compare(graph, id):
     # subject info
     subject_rl = get_related_link_of_a_wb_item_or_property(id)
     subject_name = re.sub(pattern, '', get_triple_subject_str(subject_rl))
+    print('## sync of the subject <' + subject_name + '> ##')
 
     # labels
     labels_of_subject_rdf = dict()
@@ -173,9 +175,11 @@ def compare(graph, id):
         # same lang of label, different values
         if label_lang in labels_of_subject_rdf.keys():
             if str(labels_of_subject_wb[label_lang]) != str(labels_of_subject_rdf[label_lang]):
+                print('same language of label of <' + subject_name + '> but with different values')
                 graph.set((URIRef(subject_rl), RDFS.label, Literal(labels_of_subject_wb[label_lang], lang=label_lang)))
         # new lang of label not in rdf but is in wb
         else:
+            print('new language of label of <' + subject_name + '> not in rdf but is in wb')
             graph.add((URIRef(subject_rl), RDFS.label, Literal(labels_of_subject_wb[label_lang], lang=label_lang)))
     # _______________________                  ____________________#
 
@@ -190,10 +194,12 @@ def compare(graph, id):
             # same lang of description, different values
             if descr_lang in descriptions_of_subject_rdf.keys():
                 if str(descriptions_of_subject_wb[descr_lang]) != str(descriptions_of_subject_rdf[descr_lang]):
+                    print('same language of description of <' + subject_name + '> but with different values')
                     graph.set((URIRef(subject_rl), RDFS.comment,
                                Literal(descriptions_of_subject_wb[descr_lang], lang=descr_lang)))
             # new lang of description not in rdf but is in wb
             else:
+                print('new language of description of <' + subject_name + '> not in rdf but is in wb')
                 graph.add((URIRef(subject_rl), RDFS.comment,
                            Literal(descriptions_of_subject_wb[descr_lang], lang=descr_lang)))
     # _______________________                  ____________________#
@@ -204,16 +210,27 @@ def compare(graph, id):
     # comparing predicates
     if claims_of_wb_item != predicates_of_subject:
         print('different predicates in the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
-        # existing in wikibase and not ttl file
+
+        # deletion: predicate exists in rdf but is not in wb.
         set_of_predicates = set(predicates_of_subject)
         predicates_in_rdf_not_in_wb = [x for x in set_of_predicates if x not in claims_of_wb_item]
-        # deletion: predicate exists in rdf but is not in wb.
         if len(predicates_in_rdf_not_in_wb) != 0:
             for predicate_to_delete in predicates_in_rdf_not_in_wb:
                 print('deletion of <' + str(get_triple_predicate_str(
                     predicate_to_delete)) + '> in rdf because predicate exists in rdf but is not in wb.')
                 graph.remove((URIRef(subject_rl), URIRef(predicate_to_delete), None))
         # TODO: later
+        # addition: predicate exists in rdf but is not in wb.
+        set_of_claims = set(claims_of_wb_item)
+        predicates_in_wb_not_in_rdf = [x for x in set_of_claims if x not in predicates_of_subject]
+        if len(predicates_in_wb_not_in_rdf) != 0:
+            for predicate_to_add in predicates_in_wb_not_in_rdf:
+                print('addition of <' + str(get_triple_predicate_str(
+                    predicate_to_add)) + '> in rdf because predicate exists in wb but is not in rdf.')
+                graph.add((URIRef(subject_rl), URIRef(predicate_to_add),
+                           URIRef(claim_and_value_dictionary[predicate_to_add])))
+
+
     else:
         print('same predicates in the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
         print('comparing the objects in rdf to claim values in wikibase')

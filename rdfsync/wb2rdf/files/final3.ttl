@@ -18,9 +18,9 @@ ex:awards a owl:InverseFunctionalProperty,
     owl:inverseOf ex:isAwardedBy .
 
 ex:capital a owl:ObjectProperty ;
-    rdfs:label "capital"@en,
-        "hehehehe"@es ;
-    rdfs:domain skos:Concept ;
+    rdfs:label "capital"@en ;
+    rdfs:comment "A property to indicate that a place is the official seat of government in a political entity."@en ;
+    rdfs:domain ex:isAwardedBy ;
     rdfs:range skos:Concept .
 
 ex:ResearchPersonnel a owl:Class ;

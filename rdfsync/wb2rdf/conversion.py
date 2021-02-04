@@ -143,15 +143,16 @@ def compare(graph, id):
     # getting the predicates in the graph for the subject searched
     for subject, predicate, object in graph:
         if str(subject) == str(subject_rl):
-            predicates_of_subject.append(str(predicate))
-            objects_of_subject.append(str(object))
             # labels and comments ( label and description in wb)
             if str(get_triple_predicate_str(predicate)) == 'label':
                 language_of_label = repr(object).split("lang='")[1].split("')")[0]
                 labels_of_subject_rdf[language_of_label] = str(object)
-            if str(get_triple_predicate_str(predicate)) == 'comment':
+            elif str(get_triple_predicate_str(predicate)) == 'comment':
                 language_of_descr = repr(object).split("lang='")[1].split("')")[0]
                 descriptions_of_subject_rdf[language_of_descr] = str(object)
+            else:
+                predicates_of_subject.append(str(predicate))
+                objects_of_subject.append(str(object))
 
     predicate_and_object_dictionary = get_ordered_dictionary(predicates_of_subject, objects_of_subject)
     # _______________________                  ____________________#
@@ -189,10 +190,12 @@ def compare(graph, id):
             # same lang of description, different values
             if descr_lang in descriptions_of_subject_rdf.keys():
                 if str(descriptions_of_subject_wb[descr_lang]) != str(descriptions_of_subject_rdf[descr_lang]):
-                    graph.set((URIRef(subject_rl), RDFS.comment, Literal(descriptions_of_subject_wb[descr_lang], lang=descr_lang)))
+                    graph.set((URIRef(subject_rl), RDFS.comment,
+                               Literal(descriptions_of_subject_wb[descr_lang], lang=descr_lang)))
             # new lang of description not in rdf but is in wb
             else:
-                graph.add((URIRef(subject_rl), RDFS.comment, Literal(descriptions_of_subject_wb[descr_lang], lang=descr_lang)))
+                graph.add((URIRef(subject_rl), RDFS.comment,
+                           Literal(descriptions_of_subject_wb[descr_lang], lang=descr_lang)))
     # _______________________                  ____________________#
 
     # _______________________ PREDICATES and OBJECTS / CLAIMS ____________________#

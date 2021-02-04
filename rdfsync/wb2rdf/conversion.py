@@ -142,13 +142,12 @@ def compare(graph, id):
 
     # subject properties in rdf
     predicates_of_subject = []
-    objects_of_subject = []
+    predicate_and_object_dictionary = dict()
 
     # subject properties in wb
     claims_of_wb_item = []
-    value_of_claims = []
     # _______________________ SUBJECT RDF DATA ____________________#
-    # getting the predicates in the graph for the subject searched
+    # getting the predicates and objects in the graph for the subject searched
     for subject, predicate, object in graph:
         if str(subject) == str(subject_rl):
             # labels and comments ( label and description in wb)
@@ -160,21 +159,19 @@ def compare(graph, id):
                 descriptions_of_subject_rdf[language_of_descr] = str(object)
             else:
                 predicates_of_subject.append(str(predicate))
-                objects_of_subject.append(str(object))
-
-    predicate_and_object_dictionary = get_ordered_dictionary(predicates_of_subject, objects_of_subject)
+                objects = []
+                # if key already exists, we append the objects
+                if str(predicate) in predicate_and_object_dictionary:
+                    objects = predicate_and_object_dictionary[str(predicate)]
+                objects.append(str(object))
+                predicate_and_object_dictionary[str(predicate)] = objects
     # _______________________                  ____________________#
 
     # _______________________ SUBJECT WIKIBASE DATA ____________________#
     # copying claims of item in wikibase
     for claim in wbgetclaims(id):
         claims_of_wb_item.append(str(get_related_link_of_a_wb_item_or_property(claim)))
-    # TODO:
     claim_and_value_dictionary = get_related_link_of_values_of_a_claim_in_wb(id)
-    print('@@@@@@@@@@@@@@@@@@@@')
-    print(claim_and_value_dictionary)
-    print('@@@@@@@@@@@@@@@@@@@@')
-
     # _______________________                  ____________________#
 
     # _______________________ LABELS ____________________#
@@ -214,10 +211,8 @@ def compare(graph, id):
     # _______________________                  ____________________#
 
     # _______________________ PREDICATES and OBJECTS / CLAIMS ____________________#
-    claims_of_wb_item.sort()
-    predicates_of_subject.sort()
     # comparing predicates
-    if claims_of_wb_item != predicates_of_subject:
+    if set(claims_of_wb_item) != set(predicates_of_subject):
         print('different predicates in the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
 
         # deletion: predicate exists in rdf but is not in wb.
@@ -228,6 +223,7 @@ def compare(graph, id):
                 print('deletion of <' + str(get_triple_predicate_str(
                     predicate_to_delete)) + '> in rdf because predicate exists in rdf but is not in wb.')
                 graph.remove((URIRef(subject_rl), URIRef(predicate_to_delete), None))
+
         # addition: predicate exists in rdf but is not in wb.
         set_of_claims = set(claims_of_wb_item)
         predicates_in_wb_not_in_rdf = [x for x in set_of_claims if x not in predicates_of_subject]
@@ -235,25 +231,29 @@ def compare(graph, id):
             for predicate_to_add in predicates_in_wb_not_in_rdf:
                 print('addition of <' + str(get_triple_predicate_str(
                     predicate_to_add)) + '> in rdf because predicate exists in wb but is not in rdf.')
-                # TODO:
-                for index, item in enumerate(claim_and_value_dictionary[predicate_to_add]):
-                    print(index, item)
+                for value_of_claim in claim_and_value_dictionary[predicate_to_add]:
                     graph.add((URIRef(subject_rl), URIRef(predicate_to_add),
-                               URIRef(item)))
-
+                               URIRef(value_of_claim)))
     else:
         print('same predicates in the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
-        print('comparing the objects in rdf to claim values in wikibase')
-        diff_objects_set = claim_and_value_dictionary.items() ^ predicate_and_object_dictionary.items()
-        if len(diff_objects_set) == 0:
-            print('same objects in the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
-        else:
-            print('different objects in the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
-            for claim in claim_and_value_dictionary.keys():
-                # updating the graph with the new value of the object
-                if claim in predicate_and_object_dictionary.keys():
-                    if str(predicate_and_object_dictionary[claim]) != str(claim_and_value_dictionary[claim]):
-                        graph.set((URIRef(subject_rl), URIRef(claim), URIRef(claim_and_value_dictionary[claim])))
+
+    print('comparing the objects in rdf to claim values in wikibase')
+    if claim_and_value_dictionary == predicate_and_object_dictionary:
+        print('same objects in the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
+    else:
+        print('detecting if different objects in the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
+        for predicate_to_update in claim_and_value_dictionary.keys():
+            # updating the graph with the new value of the object
+            if predicate_to_update in predicate_and_object_dictionary.keys():
+                if str(predicate_and_object_dictionary[predicate_to_update]) != str(
+                        claim_and_value_dictionary[predicate_to_update]):
+                    print('updating object of the predicate <' + predicate_to_update + '>in the item/subject <'
+                          + subject_name + '> with wikibase ID <' + id + '>')
+                    # removing old object
+                    graph.remove((URIRef(subject_rl), URIRef(predicate_to_update), None))
+                    # updating with new value
+                    for value_of_claim in claim_and_value_dictionary[str(predicate_to_update)]:
+                        graph.add((URIRef(subject_rl), URIRef(predicate_to_update), URIRef(value_of_claim)))
 
 
 def get_ordered_dictionary(keys, values):

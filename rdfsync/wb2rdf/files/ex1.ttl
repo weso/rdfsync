@@ -7,9 +7,9 @@
 
 
 ex:AdministrativePersonnel
-    rdfs:label "AdministrativePersonnel"@en ;
-    rdfs:domain ex:isAwardedBy ;
-    rdfs:subClassOf ex:HumanResource ;
+    rdf:type         owl:Class ;
+    rdfs:label       "AdministrativePersonnel"@en ;
+    rdfs:subClassOf  ex:HumanResource ;
     owl:disjointWith ex:ResearchPersonnel .
 
 ex:HumanResource
@@ -27,7 +27,7 @@ ex:capital
     rdf:type     owl:ObjectProperty ;
     rdfs:domain  skos:Concept ;
     rdfs:range   skos:Concept ;
-    rdfs:comment "A property to indicate that a place is the official seat of government in a political entity."@en;
+    rdfs:comment "A property to indicate that a place is the official seat of government in a political entity."@en ;
     rdfs:label   "capital"@en .
 
 

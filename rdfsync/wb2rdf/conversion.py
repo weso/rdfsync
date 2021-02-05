@@ -1,14 +1,22 @@
 import requests
 import re
 from secret import MEDIAWIKI_API_URL
-from rdflib import Graph, RDFS, Namespace
+from rdflib import RDFS
 from str_util import *
-from rdflib import URIRef, XSD, Literal
+from rdflib import URIRef, Literal
 from namespace_constants import default_rdf_namespaces
-from collections import OrderedDict
+import xml.etree.ElementTree as ET
 
 API_ENDPOINT = MEDIAWIKI_API_URL
-item_to_search = 'Q1'
+
+
+def get_params_of_wbfeedrecentchanges(number_of_days):
+    params = {
+        'action': 'feedrecentchanges',
+        'format': 'json',
+        'days': number_of_days
+    }
+    return params
 
 
 def get_params_of_wbgetentities(id):
@@ -41,6 +49,10 @@ def wbgetclaims(id):
         if get_labels_of_item_or_property(data, property)['en']['value'] not in ['related link', 'same as']:
             claims.append(property)
     return claims
+
+
+def wbfeedrecentchanges(number_of_days):
+    return requests.get(API_ENDPOINT, params=get_params_of_wbfeedrecentchanges(number_of_days))
 
 
 def get_information_of_item_or_property_as_dictionary(id, information):
@@ -101,20 +113,16 @@ def get_related_link_of_values_of_a_claim_in_wb(claim_id):
     return claim_with_its_values
 
 
-g1 = Graph()
-# g1.parse("https://raw.githubusercontent.com/weso/rdfsync/rdfsync/rdfsync/wb2rdf/files/ex1.ttl", format="ttl")
-g1.parse("files/ex1.ttl", format="ttl")
-
-
-def compare(graph, id):
+def execute_synchronization(graph, id):
     pattern = re.compile(r'\s+')  # no spaces
     # subject info
     subject_rl = get_related_link_of_a_wb_item_or_property(id)
     subject_name = re.sub(pattern, '', get_triple_subject_str(subject_rl))
-    # TODO: name check
+    # name check
     if not subject_rl:
         print('Please set related link of item/property with id <' + id + '> in order to start the sync.')
         return
+
     print('## sync of the subject <' + subject_name + '> ##')
     # subjects to check it the graph contains it later.
     subjects_check = []
@@ -285,5 +293,14 @@ def binding_namespace_of_graph(graph, related_link_of_item):
                 graph.bind(str(key), str(namespace))
 
 
-compare(g1, 'Q10')
-g1.serialize(destination='files/final3.ttl', format="ttl")
+def run_synchronization(number_of_days):
+    recent_feed_in_xml = wbfeedrecentchanges(number_of_days).text
+    doc = ET.fromstring(recent_feed_in_xml)
+    properties_or_items = doc.findall('.//channel//item//title')
+    to_update_list = set()
+    for poi in properties_or_items:
+        id = poi.text.split(':')[1]
+        to_update_list.add(id)
+    final_sync_list = set(to_update_list)
+    print('The items/properties to sync are: ' + str(final_sync_list))
+    return final_sync_list

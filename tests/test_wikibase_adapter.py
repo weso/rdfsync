@@ -12,7 +12,7 @@ from rdfsync.triplestore import URIElement, LiteralElement, ModificationResult, 
 from rdfsync.triplestore.wikibase_adapter import DEFAULT_LANG, MAPPINGS_PROP_DESC, \
     RELATED_LINK_DESC, RELATED_LINK_LABEL, \
     MAPPINGS_PROP_LABEL, is_asio_uri
-from rdfsync.util.uri_constants import ASIO_BASE, GEO_BASE, RDFS_LABEL, RDFS_COMMENT, \
+from rdfsync.util.namespace_constants import ASIO_BASE, GEO_BASE, RDFS_LABEL, RDFS_COMMENT, \
     SKOS_ALTLABEL, SCHEMA_NAME, SCHEMA_DESCRIPTION, \
     SKOS_PREFLABEL
 

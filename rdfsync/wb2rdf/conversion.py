@@ -4,6 +4,7 @@ from secret import MEDIAWIKI_API_URL
 from rdflib import Graph, RDFS, Namespace
 from str_util import *
 from rdflib import URIRef, XSD, Literal
+from namespace_constants import default_rdf_namespaces
 from collections import OrderedDict
 
 API_ENDPOINT = MEDIAWIKI_API_URL
@@ -100,30 +101,6 @@ def get_related_link_of_values_of_a_claim_in_wb(claim_id):
     return claim_with_its_values
 
 
-# # basic item info
-# r = wbgetentity(item_to_search)
-# # labels
-# print(get_labels_of_item_or_property(r, item_to_search))
-# # descriptions
-# print(get_descriptions_of_item_or_property(r, item_to_search))
-# # aliases
-# print(get_aliases_of_item_or_property(r, item_to_search))
-
-# # basic claims info
-# claims = wbgetclaims(item_to_search)
-# print(claims)
-#     r = wbgetentity(property)
-#     # labels
-#     print(get_labels_of_item_or_property(r, property))
-#     # descriptions
-#     print(get_descriptions_of_item_or_property(r, property))
-#     # aliases
-#     print(get_aliases_of_item_or_property(r, property))
-
-# wbgetclaims(item_to_search)
-
-# print(subject_rl)
-
 g1 = Graph()
 # g1.parse("https://raw.githubusercontent.com/weso/rdfsync/rdfsync/rdfsync/wb2rdf/files/ex1.ttl", format="ttl")
 g1.parse("files/ex1.ttl", format="ttl")
@@ -189,24 +166,9 @@ def compare(graph, id):
 
     # _______________________ SUBJECT EXISTS IN WB AND NOT RDF ____________________#
     if not subjects_check.__contains__(str(subject_rl)):
-        print('The wb item/property with ID <' + id + '> does not exist in rdf file.')
-        print('Creating a new triple with its data.')
-        # new labels
-        for label_lang in labels_of_subject_wb.keys():
-            print('new language of label of <' + subject_name + '> CREATED')
-            graph.add((URIRef(subject_rl), RDFS.label, Literal(labels_of_subject_wb[label_lang], lang=label_lang)))
-        # # new descriptions
-        # for descr_lang in descriptions_of_subject_wb.keys():
-        #     print('new language of description of <' + subject_name + '> CREATED')
-        #     graph.add((URIRef(subject_rl), RDFS.comment,
-        #                Literal(descriptions_of_subject_wb[descr_lang], lang=descr_lang)))
-        # # new triples
-        # for new_predicate in claim_and_value_dictionary.keys():
-        #     print('new triple for the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
-        #     for value_of_claim in claim_and_value_dictionary[str(new_predicate)]:
-        #         graph.add((URIRef(subject_rl), URIRef(new_predicate), URIRef(value_of_claim)))
+        create_new_triple(claim_and_value_dictionary, descriptions_of_subject_wb, graph, id, labels_of_subject_wb,
+                          subject_name, subject_rl)
         return
-
     # _______________________                  ____________________#
 
     # _______________________ LABELS ____________________#
@@ -289,17 +251,39 @@ def compare(graph, id):
                         graph.add((URIRef(subject_rl), URIRef(predicate_to_update), URIRef(value_of_claim)))
 
 
-def get_ordered_dictionary(keys, values):
-    unordered_dict = dict(zip(keys, values))
-    return dict(sorted(unordered_dict.items()))
+def create_new_triple(claim_and_value_dictionary, descriptions_of_subject_wb, graph, id, labels_of_subject_wb,
+                      subject_name, subject_rl):
+    print('The wb item/property with ID <' + id + '> does not exist in rdf file.')
+    print('Creating a new triple with its data.')
+    # adding new namespaces if they doesn't exist
+    binding_namespace_of_graph(graph, subject_rl)
+    # new labels
+    for label_lang in labels_of_subject_wb.keys():
+        print('new language of label of <' + subject_name + '> CREATED')
+        graph.add((URIRef(subject_rl), RDFS.label, Literal(labels_of_subject_wb[label_lang], lang=label_lang)))
+    # new descriptions
+    for descr_lang in descriptions_of_subject_wb.keys():
+        print('new language of description of <' + subject_name + '> CREATED')
+        graph.add((URIRef(subject_rl), RDFS.comment,
+                   Literal(descriptions_of_subject_wb[descr_lang], lang=descr_lang)))
+    # new triples
+    for new_predicate in claim_and_value_dictionary.keys():
+        # adding new namespaces if they doesn't exist
+        binding_namespace_of_graph(graph, new_predicate)
+        print('new triple for the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
+        for value_of_claim in claim_and_value_dictionary[str(new_predicate)]:
+            # adding new namespaces if they doesn't exist
+            binding_namespace_of_graph(graph, value_of_claim)
+            # adding new triple
+            graph.add((URIRef(subject_rl), URIRef(new_predicate), URIRef(value_of_claim)))
+
+
+def binding_namespace_of_graph(graph, related_link_of_item):
+    if str(get_namespace(related_link_of_item)) not in dict(graph.namespaces()).values():
+        for key, namespace in default_rdf_namespaces.items():
+            if str(namespace) == str(get_namespace(related_link_of_item)):
+                graph.bind(str(key), str(namespace))
 
 
 compare(g1, 'Q10')
 g1.serialize(destination='files/final3.ttl', format="ttl")
-
-# r = wbgetentity(item_to_search)
-# # # labels
-# print(get_aliases_of_item_or_property(r, item_to_search))
-# # descriptions
-# print(get_descriptions_of_item_or_property(r, item_to_search))
-# print(get_information_of_item_or_property_as_dictionary('P4', 'labels'))

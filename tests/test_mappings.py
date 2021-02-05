@@ -5,7 +5,7 @@ from datetime import date, datetime, time
 from wikidataintegrator import wdi_core
 
 from rdfsync.util.mappings import datatype2wdiobject, datatype2wdidtype
-from rdfsync.util.uri_constants import GEO_BASE, XSD_BASE
+from rdfsync.util.namespace_constants import GEO_BASE, XSD_BASE
 
 def test_time_mapping():
     time_val = time(4, 24 ,0)

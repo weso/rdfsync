@@ -6,7 +6,7 @@ from rdfsync.synchronization import AdditionOperation, RemovalOperation, \
                                           GraphDiffSyncAlgorithm, NaiveSyncAlgorithm, \
                                           RDFSyncAlgorithm
 from rdfsync.triplestore import LiteralElement, URIElement
-from rdfsync.util.uri_constants import RDFS_COMMENT, RDFS_LABEL, RDFS_SUBCLASSOF, \
+from rdfsync.util.namespace_constants import RDFS_COMMENT, RDFS_LABEL, RDFS_SUBCLASSOF, \
                                              RDF_TYPE, OWL_CLASS, OWL_DISJOINT_WITH
 
 from .common import load_file_from

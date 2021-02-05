@@ -9,7 +9,7 @@ from rdfsync.synchronization import OntologySynchronizer, GraphDiffSyncAlgorithm
                                           NaiveSyncAlgorithm, AdditionOperation, RemovalOperation
 from rdfsync.synchronization.ontology_synchronizer import _filter_invalid_ops
 from rdfsync.triplestore import LiteralElement, URIElement
-from rdfsync.util.uri_constants import OWL_BASE
+from rdfsync.util.namespace_constants import OWL_BASE
 
 from .common import load_file_from
 

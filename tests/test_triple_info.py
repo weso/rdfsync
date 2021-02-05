@@ -6,7 +6,7 @@ from wikidataintegrator.wdi_core import WDItemID, WDProperty, WDString, WDQuanti
 
 from rdfsync.triplestore import AnonymousElement, LiteralElement, TripleElement, TripleInfo, URIElement
 from rdfsync.util.error import InvalidArgumentError
-from rdfsync.util.uri_constants import ASIO_BASE, GEO_BASE
+from rdfsync.util.namespace_constants import ASIO_BASE, GEO_BASE
 
 
 @pytest.fixture()

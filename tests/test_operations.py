@@ -5,7 +5,7 @@ import pytest
 from rdfsync.synchronization import AdditionOperation, BatchOperation, RemovalOperation
 from rdfsync.synchronization.operations import optimize_ops
 from rdfsync.triplestore import LiteralElement, TripleInfo, URIElement
-from rdfsync.util.uri_constants import RDFS_LABEL
+from rdfsync.util.namespace_constants import RDFS_LABEL
 
 
 @pytest.fixture

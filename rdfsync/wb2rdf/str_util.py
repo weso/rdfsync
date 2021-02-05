@@ -16,6 +16,10 @@ def get_triple_object_str(object):
     return obj_name
 
 def get_namespace(link_string):
-    i = link_string.index('#')
-    return link_string[:i+len('#')]
+    if '#' in link_string :
+        i = link_string.index('#')
+        return link_string[:i + len('#')]
+    else:
+        link_string.rsplit('/', 1)
+        return link_string.rsplit('/', 1)[0] + '/'
 

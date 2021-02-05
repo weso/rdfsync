@@ -1,7 +1,7 @@
 import requests
 import re
 from secret import MEDIAWIKI_API_URL
-from rdflib import Graph, RDFS
+from rdflib import Graph, RDFS, Namespace
 from str_util import *
 from rdflib import URIRef, XSD, Literal
 from collections import OrderedDict
@@ -134,7 +134,13 @@ def compare(graph, id):
     # subject info
     subject_rl = get_related_link_of_a_wb_item_or_property(id)
     subject_name = re.sub(pattern, '', get_triple_subject_str(subject_rl))
+    # TODO: name check
+    if not subject_rl:
+        print('Please set related link of item/property with id <' + id + '> in order to start the sync.')
+        return
     print('## sync of the subject <' + subject_name + '> ##')
+    # subjects to check it the graph contains it later.
+    subjects_check = []
 
     # labels
     labels_of_subject_rdf = dict()
@@ -146,10 +152,14 @@ def compare(graph, id):
 
     # subject properties in wb
     claims_of_wb_item = []
+
     # _______________________ SUBJECT RDF DATA ____________________#
     # getting the predicates and objects in the graph for the subject searched
     for subject, predicate, object in graph:
         if str(subject) == str(subject_rl):
+            # checking if the subject really exists in rdf file
+            subjects_check.append(str(subject))
+
             # labels and comments ( label and description in wb)
             if str(get_triple_predicate_str(predicate)) == 'label':
                 language_of_label = repr(object).split("lang='")[1].split("')")[0]
@@ -172,11 +182,35 @@ def compare(graph, id):
     for claim in wbgetclaims(id):
         claims_of_wb_item.append(str(get_related_link_of_a_wb_item_or_property(claim)))
     claim_and_value_dictionary = get_related_link_of_values_of_a_claim_in_wb(id)
+    # labels
+    labels_of_subject_wb = get_information_of_item_or_property_as_dictionary(id, 'labels')
+    descriptions_of_subject_wb = get_information_of_item_or_property_as_dictionary(id, 'descriptions')
+    # _______________________                  ____________________#
+
+    # _______________________ SUBJECT EXISTS IN WB AND NOT RDF ____________________#
+    if not subjects_check.__contains__(str(subject_rl)):
+        print('The wb item/property with ID <' + id + '> does not exist in rdf file.')
+        print('Creating a new triple with its data.')
+        # new labels
+        for label_lang in labels_of_subject_wb.keys():
+            print('new language of label of <' + subject_name + '> CREATED')
+            graph.add((URIRef(subject_rl), RDFS.label, Literal(labels_of_subject_wb[label_lang], lang=label_lang)))
+        # # new descriptions
+        # for descr_lang in descriptions_of_subject_wb.keys():
+        #     print('new language of description of <' + subject_name + '> CREATED')
+        #     graph.add((URIRef(subject_rl), RDFS.comment,
+        #                Literal(descriptions_of_subject_wb[descr_lang], lang=descr_lang)))
+        # # new triples
+        # for new_predicate in claim_and_value_dictionary.keys():
+        #     print('new triple for the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
+        #     for value_of_claim in claim_and_value_dictionary[str(new_predicate)]:
+        #         graph.add((URIRef(subject_rl), URIRef(new_predicate), URIRef(value_of_claim)))
+        return
+
     # _______________________                  ____________________#
 
     # _______________________ LABELS ____________________#
     # comparing labels
-    labels_of_subject_wb = get_information_of_item_or_property_as_dictionary(id, 'labels')
     for label_lang in labels_of_subject_wb.keys():
         # same lang of label, different values
         if label_lang in labels_of_subject_rdf.keys():
@@ -191,7 +225,6 @@ def compare(graph, id):
 
     # _______________________ DESCRIPTIONS ____________________#
     # comparing descriptions
-    descriptions_of_subject_wb = get_information_of_item_or_property_as_dictionary(id, 'descriptions')
     if not bool(descriptions_of_subject_wb):
         print('there are no descriptions in wb. updating the rdf')
         graph.remove((URIRef(subject_rl), RDFS.comment, None))
@@ -261,7 +294,7 @@ def get_ordered_dictionary(keys, values):
     return dict(sorted(unordered_dict.items()))
 
 
-compare(g1, 'Q6')
+compare(g1, 'Q10')
 g1.serialize(destination='files/final3.ttl', format="ttl")
 
 # r = wbgetentity(item_to_search)

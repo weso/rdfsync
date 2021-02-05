@@ -15,3 +15,7 @@ def get_triple_object_str(object):
     obj_name = object_to_string.rpartition("#")[2]
     return obj_name
 
+def get_namespace(link_string):
+    i = link_string.index('#')
+    return link_string[:i+len('#')]
+

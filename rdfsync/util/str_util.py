@@ -1,28 +1,114 @@
 """ Module to get the names of each subject, predicate, object of a triple individually"""
+from errors import *
+import re
+
+regex = re.compile(
+    r'^(?:http|ftp)s?://'  # http:// or https://
+    r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
+    r'localhost|'  # localhost...
+    r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
+    r'(?::\d+)?'  # optional port
+    r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 
 
 def get_triple_subject_str(subject):
-    subject_to_string = str(subject).rsplit("/", 1)[-1]
-    subject_name = subject_to_string.rpartition("#")[2]
-    return subject_name
+    """
+
+    Parameters
+    ----------
+    subject: the related link or the full namespace of the subject
+
+    Returns
+    -------
+    the name/label of subject without link
+    """
+    if not subject:
+        return ''
+    if re.match(regex, subject) is not None:
+        if '#' in subject:
+            object_to_string = str(subject).rsplit("/", 1)[-1]
+            obj_name = object_to_string.rpartition("#")[2]
+            return obj_name
+        else:
+            subject.rsplit('/', 1)
+            return subject.rsplit('/', 1)[-1]
+    else:
+        raise StringValidationError("wrong subject link format")
 
 
 def get_triple_predicate_str(predicate):
-    predicate_to_string = str(predicate).rsplit("/", 1)[-1]
-    prd_name = predicate_to_string.rpartition("#")[2]
-    return prd_name
+    """
+
+    Parameters
+    ----------
+    predicate: the related link or the full namespace of the predicate
+
+    Returns
+    -------
+    the name/label of predicate without link
+    """
+    if not predicate:
+        return ''
+    if re.match(regex, predicate) is not None:
+        if '#' in predicate:
+            object_to_string = str(predicate).rsplit("/", 1)[-1]
+            obj_name = object_to_string.rpartition("#")[2]
+            return obj_name
+        else:
+            predicate.rsplit('/', 1)
+            return predicate.rsplit('/', 1)[-1]
+
+    else:
+        raise StringValidationError("wrong predicate link format")
 
 
 def get_triple_object_str(object):
-    object_to_string = str(object).rsplit("/", 1)[-1]
-    obj_name = object_to_string.rpartition("#")[2]
-    return obj_name
+    """
+
+    Parameters
+    ----------
+    object: the related link or the full namespace of the object
+
+    Returns
+    -------
+    the name/label of object without link
+    """
+    if not object:
+        return ''
+    if re.match(regex, object) is not None:
+        if '#' in object:
+            object_to_string = str(object).rsplit("/", 1)[-1]
+            obj_name = object_to_string.rpartition("#")[2]
+            return obj_name
+        else:
+            object.rsplit('/', 1)
+            return object.rsplit('/', 1)[-1]
+    else:
+        raise StringValidationError("wrong object link format")
 
 
 def get_namespace(link_string):
-    if '#' in link_string:
-        i = link_string.index('#')
-        return link_string[:i + len('#')]
+    """
+
+    Parameters
+    ----------
+    link_string: the related link or the full namespace/link
+
+    Returns
+    -------
+    the link without the final word.
+    example : input: http://www.w3.org/2002/07/owl#Class
+              returns: http://www.w3.org/2002/07/owl#
+    """
+    if not link_string:
+        return ''
+
+    if re.match(regex, link_string) is not None:
+        if '#' in link_string:
+            i = link_string.index('#')
+            return link_string[:i + len('#')]
+        else:
+            link_string.rsplit('/', 1)
+            return link_string.rsplit('/', 1)[0] + '/'
     else:
-        link_string.rsplit('/', 1)
-        return link_string.rsplit('/', 1)[0] + '/'
+        raise StringValidationError("wrong namespace link format")

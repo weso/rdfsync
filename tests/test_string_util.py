@@ -1,5 +1,6 @@
 import pytest
-from rdfsync.util.str_util import get_namespace, get_triple_predicate_str, get_triple_subject_str, get_triple_object_str
+from rdfsync.util.string_util import get_namespace, get_triple_predicate_str, get_triple_subject_str, \
+    get_triple_object_str, FormatValidationError, StringValidationError, regex
 from rdfsync.util.errors import StringValidationError
 
 related_link_subject = "http://www.w3.org/2002/07/owl#Class"

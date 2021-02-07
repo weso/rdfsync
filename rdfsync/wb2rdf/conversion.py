@@ -1,7 +1,7 @@
 import requests
 import re
 from rdflib import RDFS, Graph
-from str_util import *
+from string_util import *
 from rdflib import URIRef, Literal
 from namespace_constants import default_rdf_namespaces
 import xml.etree.ElementTree as ET

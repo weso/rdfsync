@@ -8,8 +8,7 @@ with open(path.join(curr_dir, 'README.md'), encoding='utf-8') as f:
 setup(
     name='rdfsync',
     version='0.0.1',
-    packages=['rdfsync', 'rdfsync.external', 'rdfsync.synchronization',
-              'rdfsync.triplestore', 'rdfsync.util', 'rdfsync.githubcon', 'rdfsync.wb2rdf'],
+    packages=['rdfsync', 'rdfsync.util', 'rdfsync.githubcon', 'rdfsync.wb2rdf'],
     url='https://github.com/weso/rdfsync',
     license='MIT',
     author='Othmane Bakhtaoui',
@@ -17,7 +16,7 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     install_requires=[
-        'requests==2.23.0', 'rdflib==5.0.0', 'ontospy==1.9.8.3', 'PyGithub==1.53'
+        'requests==2.23.0', 'rdflib==5.0.0', 'PyGithub==1.53'
     ],
     classifiers=[
         'Intended Audience :: Developers',

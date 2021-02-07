@@ -1,5 +1,5 @@
 """ Module to get the names of each subject, predicate, object of a triple individually"""
-from .errors import StringValidationError, FormatValidationError
+from .errors import StringValidationError
 import re
 
 regex = re.compile(
@@ -58,31 +58,6 @@ def get_triple_predicate_str(predicate):
             predicate.rsplit('/', 1)
             return predicate.rsplit('/', 1)[-1]
 
-    else:
-        raise StringValidationError()
-
-
-def get_triple_object_str(object):
-    """
-
-    Parameters
-    ----------
-    object: the related link or the full namespace of the object
-
-    Returns
-    -------
-    the name/label of object without link
-    """
-    if not object:
-        return ''
-    if re.match(regex, object) is not None:
-        if '#' in object:
-            object_to_string = str(object).rsplit("/", 1)[-1]
-            obj_name = object_to_string.rpartition("#")[2]
-            return obj_name
-        else:
-            object.rsplit('/', 1)
-            return object.rsplit('/', 1)[-1]
     else:
         raise StringValidationError()
 

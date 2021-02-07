@@ -4,8 +4,8 @@ from rdflib import RDFS, Graph
 from rdfsync.util.string_util import get_namespace, get_triple_predicate_str, get_triple_subject_str, \
     get_triple_object_str, StringValidationError, FormatValidationError
 from rdflib import URIRef, Literal
-from namespace_constants import default_rdf_namespaces
 import xml.etree.ElementTree as ET
+from rdfsync.util.namespace_constants import default_rdf_namespaces
 
 
 class Converter:

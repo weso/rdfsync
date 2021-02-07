@@ -1,5 +1,5 @@
 """ Module to get the names of each subject, predicate, object of a triple individually"""
-from errors import StringValidationError, FormatValidationError
+from .errors import StringValidationError, FormatValidationError
 import re
 
 regex = re.compile(

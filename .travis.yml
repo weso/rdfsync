@@ -5,9 +5,10 @@ dist: xenial
 install:
   - pip install --progress-bar off -r requirements.txt
   - pip install --progress-bar off pytest-cov pytest-faulthandler codecov pytest-bdd
+  - pip install -e .
 script:
   # run tests
-  - py.test --cov-report=xml --cov=rdfsync
+  - pytest --cov-report=xml --cov=rdfsync
 
 after_success:
   - codecov

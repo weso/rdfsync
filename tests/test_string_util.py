@@ -1,6 +1,6 @@
 import pytest
-from str_util import get_namespace, get_triple_predicate_str, get_triple_subject_str, get_triple_object_str
-from errors import StringValidationError
+from rdfsync.util.str_util import get_namespace, get_triple_predicate_str, get_triple_subject_str, get_triple_object_str
+from rdfsync.util.errors import StringValidationError
 
 related_link_subject = "http://www.w3.org/2002/07/owl#Class"
 related_link_object = "http://www.w3.org/2004/02/skos/core#Concept"

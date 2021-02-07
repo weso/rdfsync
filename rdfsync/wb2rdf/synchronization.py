@@ -4,12 +4,14 @@ from secret import GITHUB_ACCESS_TOKEN, GITHUB_TARGET_REPO, SOURCE_BRANCH, TARGE
 from github_connection import *
 import ntpath
 
-# algorithm execution
+# graph ops
 graph = Graph()
 file_path = "https://raw.githubusercontent.com/weso/rdfsync/rdfsync/rdfsync/wb2rdf/files/ex1.ttl"
 graph.parse(file_path, format="ttl")  # currently using ttl. change it to your format.
-set_api_endpoint(MEDIAWIKI_API_URL) # http://XXX/w/api.php
-number_of_days = 100 # number of days to sync data
+
+# algorithm execution
+set_api_endpoint(MEDIAWIKI_API_URL)  # http://XXX/w/api.php
+number_of_days = 100  # number of days to sync data
 for item_property in get_items_properties_to_sync(number_of_days):
     execute_synchronization(graph=graph, id=item_property)
 

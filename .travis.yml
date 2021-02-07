@@ -7,7 +7,7 @@ install:
   - pip install --progress-bar off pytest-cov pytest-faulthandler codecov pytest-bdd
 script:
   # run tests
-  - py.test --cov-report=xml --cov=wbsync
+  - py.test --cov-report=xml --cov=rdfsync
 
 after_success:
   - codecov

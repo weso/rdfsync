@@ -1,5 +1,6 @@
 from .common import load_graph_from
 from rdflib import URIRef
+
 graph = load_graph_from("simple.ttl")
 
 triple_1 = ((URIRef('http://www.purl.org/hercules/asio/core#AdministrativePersonnel'),
@@ -15,10 +16,8 @@ triple_3 = ((URIRef('http://www.purl.org/hercules/asio/core#AdministrativePerson
              URIRef('http://www.w3.org/2002/07/owl#Class')))
 
 triple_4_non_existent = ((URIRef('http://www.purl.org/hercules/asio/core#capital'),
-             URIRef('http://www.w3.org/2002/07/owl#disjointWith'),
-             URIRef('http://www.purl.org/hercules/asio/core#ResearchPersonnel')))
-
-
+                          URIRef('http://www.w3.org/2002/07/owl#disjointWith'),
+                          URIRef('http://www.purl.org/hercules/asio/core#ResearchPersonnel')))
 
 
 def test_correct_graph():

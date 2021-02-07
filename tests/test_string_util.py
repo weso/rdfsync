@@ -1,7 +1,6 @@
 import pytest
 from rdfsync.util.string_util import get_namespace, get_triple_predicate_str, get_triple_subject_str, \
-    get_triple_object_str, StringValidationError, FormatValidationError
-
+    StringValidationError
 
 related_link_subject = "http://www.w3.org/2002/07/owl#Class"
 related_link_object = "http://www.w3.org/2004/02/skos/core#Concept"
@@ -19,18 +18,6 @@ def test_triple_subject_name():
     assert get_triple_subject_str("") == ''
     with pytest.raises(StringValidationError):
         get_triple_subject_str("not working")
-
-
-
-def test_triple_object_name():
-    value = get_triple_object_str(related_link_object)
-    assert value == 'Concept'
-    value = get_triple_object_str(namespace_with_slash)
-    assert value == 'Concept'
-    assert get_triple_object_str("") == ''
-    with pytest.raises(StringValidationError):
-        get_triple_object_str("not working")
-
 
 
 def test_triple_predicate_name():

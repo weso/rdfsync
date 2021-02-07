@@ -1,4 +1,3 @@
 from .namespace_constants import default_rdf_namespaces
 
-from .string_util import get_namespace, get_triple_predicate_str, get_triple_subject_str, get_triple_object_str, \
-    FormatValidationError, StringValidationError
+from .string_util import get_namespace, get_triple_predicate_str, get_triple_subject_str, StringValidationError

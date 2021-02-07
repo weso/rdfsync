@@ -1,5 +1,5 @@
 """ Module to get the names of each subject, predicate, object of a triple individually"""
-from errors import *
+from errors import StringValidationError, FormatValidationError
 import re
 
 regex = re.compile(
@@ -33,7 +33,7 @@ def get_triple_subject_str(subject):
             subject.rsplit('/', 1)
             return subject.rsplit('/', 1)[-1]
     else:
-        raise StringValidationError("wrong subject link format")
+        raise StringValidationError()
 
 
 def get_triple_predicate_str(predicate):
@@ -59,7 +59,7 @@ def get_triple_predicate_str(predicate):
             return predicate.rsplit('/', 1)[-1]
 
     else:
-        raise StringValidationError("wrong predicate link format")
+        raise StringValidationError()
 
 
 def get_triple_object_str(object):
@@ -84,7 +84,7 @@ def get_triple_object_str(object):
             object.rsplit('/', 1)
             return object.rsplit('/', 1)[-1]
     else:
-        raise StringValidationError("wrong object link format")
+        raise StringValidationError()
 
 
 def get_namespace(link_string):
@@ -100,9 +100,6 @@ def get_namespace(link_string):
     example : input: http://www.w3.org/2002/07/owl#Class
               returns: http://www.w3.org/2002/07/owl#
     """
-    if not link_string:
-        return ''
-
     if re.match(regex, link_string) is not None:
         if '#' in link_string:
             i = link_string.index('#')
@@ -111,4 +108,4 @@ def get_namespace(link_string):
             link_string.rsplit('/', 1)
             return link_string.rsplit('/', 1)[0] + '/'
     else:
-        raise StringValidationError("wrong namespace link format")
+        raise StringValidationError()

@@ -1,2 +1,2 @@
-# cidoc-sync
-Tools to synchronise data between the ontology files and Wikibase instance for CIDOC
+# rdfsync
+algorithm to synchronise data between the ontology files and a given Wikibase instance.

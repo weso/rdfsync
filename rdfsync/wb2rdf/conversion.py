@@ -1,13 +1,17 @@
 import requests
 import re
-from secret import MEDIAWIKI_API_URL
 from rdflib import RDFS
 from str_util import *
 from rdflib import URIRef, Literal
 from namespace_constants import default_rdf_namespaces
 import xml.etree.ElementTree as ET
 
-API_ENDPOINT = MEDIAWIKI_API_URL
+global API_ENDPOINT
+
+
+def set_api_endpoint(api_endpoint):
+    global API_ENDPOINT
+    API_ENDPOINT = api_endpoint
 
 
 def get_params_of_wbfeedrecentchanges(number_of_days):
@@ -293,7 +297,7 @@ def binding_namespace_of_graph(graph, related_link_of_item):
                 graph.bind(str(key), str(namespace))
 
 
-def run_synchronization(number_of_days):
+def get_items_properties_to_sync(number_of_days):
     recent_feed_in_xml = wbfeedrecentchanges(number_of_days).text
     doc = ET.fromstring(recent_feed_in_xml)
     properties_or_items = doc.findall('.//channel//item//title')
@@ -304,3 +308,7 @@ def run_synchronization(number_of_days):
     final_sync_list = set(to_update_list)
     print('The items/properties to sync are: ' + str(final_sync_list))
     return final_sync_list
+
+
+def serialize_file(graph, format):
+    return graph.serialize(format=format)

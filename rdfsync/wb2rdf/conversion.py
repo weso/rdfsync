@@ -14,10 +14,10 @@ class Converter:
     graph = ''
     preferred_format = ''
 
-    def __init__(self, endpoint: str, day_num=100, input_format='ttl'):
+    def __init__(self, endpoint: str, day_num=100, input_format='ttl', graph=Graph()):
         self.API_ENDPOINT = endpoint
         self.number_of_days = day_num
-        self.graph = Graph()
+        self.graph = graph
         self.preferred_format = input_format
 
     def get_params_of_wbfeedrecentchanges(self):
@@ -110,6 +110,7 @@ class Converter:
         return claim_with_its_values
 
     def execute_synchronization(self, id):
+        print('Sync in the wikibase <' + self.API_ENDPOINT + '>.')
         pattern = re.compile(r'\s+')  # no spaces
         # subject info
         subject_rl = self.get_related_link_of_a_wb_item_or_property(id)
@@ -276,7 +277,8 @@ class Converter:
         for new_predicate in claim_and_value_dictionary.keys():
             # adding new namespaces if they doesn't exist
             self.binding_namespace_of_graph(new_predicate)
-            print('new triple for the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
+            print(
+                'new predicate <' + new_predicate + '> for the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
             for value_of_claim in claim_and_value_dictionary[str(new_predicate)]:
                 # adding new namespaces if they doesn't exist
                 self.binding_namespace_of_graph(value_of_claim)

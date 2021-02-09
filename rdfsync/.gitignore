@@ -9,7 +9,7 @@ __pycache__/
 .pytest_cache/
 
 .DS_Store
-
+../../wikibase-sync/wbsync/populate.py
 docs/sphinx/build
 
 # Codecov

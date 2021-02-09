@@ -177,6 +177,7 @@ class Converter:
         # _______________________                  ____________________#
 
         # _______________________ LABELS ____________________#
+
         # comparing labels
         for label_lang in labels_of_subject_wb.keys():
             # same lang of label, different values
@@ -190,6 +191,13 @@ class Converter:
                 print('new language of label of <' + subject_name + '> not in rdf but is in wb')
                 self.graph.add(
                     (URIRef(subject_rl), RDFS.label, Literal(labels_of_subject_wb[label_lang], lang=label_lang)))
+        # deleting labels if not exists in wb but exists in rdf
+        for label_lang in labels_of_subject_rdf.keys():
+            if label_lang not in labels_of_subject_wb.keys():
+                print('deleting label of the language <' + label_lang + '> of <'
+                      + subject_name + '> because it does not exist in wb')
+                self.graph.remove(
+                    (URIRef(subject_rl), RDFS.label, Literal(labels_of_subject_rdf[label_lang], lang=label_lang)))
         # _______________________                  ____________________#
 
         # _______________________ DESCRIPTIONS ____________________#
@@ -210,6 +218,13 @@ class Converter:
                     print('new language of description of <' + subject_name + '> not in rdf but is in wb')
                     self.graph.add((URIRef(subject_rl), RDFS.comment,
                                     Literal(descriptions_of_subject_wb[descr_lang], lang=descr_lang)))
+        # deleting descriptions if not exists in wb but exists in rdf
+        for descr_lang in descriptions_of_subject_rdf.keys():
+            if descr_lang not in descriptions_of_subject_wb.keys():
+                print('deleting description of the language <' + descr_lang + '> of <'
+                      + subject_name + '> because it does not exist in wb')
+                self.graph.remove(
+                    (URIRef(subject_rl), RDFS.comment, Literal(descriptions_of_subject_rdf[descr_lang], lang=descr_lang)))
         # _______________________                  ____________________#
 
         # _______________________ PREDICATES and OBJECTS / CLAIMS ____________________#

@@ -44,4 +44,3 @@ def test_populate_empty_rdf():
     assert graph.__contains__(triple_3_existent)
     assert not graph.__contains__(triple_4_non_existent)
     assert len(graph) == 6  # with label and description
-    print(graph.serialize(format='ttl'))

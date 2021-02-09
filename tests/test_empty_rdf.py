@@ -1,4 +1,4 @@
-from .common import load_graph_from, MEDIAWIKI_API_URL
+from .common import MEDIAWIKI_API_URL
 from rdflib import URIRef, Graph
 from rdfsync.wb2rdf.conversion import Converter
 

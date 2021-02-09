@@ -19,9 +19,8 @@ subject_1_comment = ((URIRef('http://www.purl.org/hercules/asio/core#HumanResour
 
 # will be deleted
 subject_1_old_comment = ((URIRef('http://www.purl.org/hercules/asio/core#HumanResource'),
-                      URIRef('http://www.w3.org/2000/01/rdf-schema#comment'),
-                      Literal('borrame', lang='es')))
-
+                          URIRef('http://www.w3.org/2000/01/rdf-schema#comment'),
+                          Literal('borrame', lang='es')))
 
 # will be deleted
 subject_2_old_label = ((URIRef('http://www.purl.org/hercules/asio/core#country'),
@@ -58,10 +57,9 @@ def test_populate_empty_rdf():
     converter.execute_synchronization(id=wikibase_id_1)
     converter.execute_synchronization(id=wikibase_id_2)
 
-    print(graph.serialize(format='ttl'))
     assert graph.__contains__(subject_2_new_description)
     assert not graph.__contains__(subject_2_old_description)  # updated
-    assert not graph.__contains__(subject_1_old_comment) #deleted
+    assert not graph.__contains__(subject_1_old_comment)  # deleted
     assert graph.__contains__(subject_2_same_label)  # same
     assert not graph.__contains__(subject_2_old_label)  # deleted
     assert graph.__contains__(subject_1_label)

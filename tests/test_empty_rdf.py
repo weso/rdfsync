@@ -52,3 +52,6 @@ def test_populate_empty_rdf():
     assert graph.__contains__(triple_6)
     assert not graph.__contains__(triple_7_non_existent)
     assert not graph.__contains__(triple_8_non_existent)
+    print(converter.serialize_file())
+
+

@@ -1,6 +1,6 @@
 ignore:
-  - "rdfsync/synchronization.py"
-  - "githubcon/github_connection.py"
+  - "/rdfsync/synchronization.py"
+  - "/rdfsync/githubcon/github_connection.py"
 
 codecov:
   notify:

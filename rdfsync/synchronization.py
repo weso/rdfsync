@@ -10,7 +10,7 @@ file_path = 'https://raw.githubusercontent.com/weso/rdfsync/master/tests/data/sy
 converter = Converter(endpoint=MEDIAWIKI_API_URL, input_format='ttl')  # http://XXX/w/api.php
 converter.read_file_and_create_graph(file_path)
 for item_property in converter.get_items_properties_to_sync():
-    converter.execute_synchronization(id=item_property)
+    converter.execute_synchronization(wb_id=item_property)
 
 # pushing the changes to github
 github_token = GITHUB_ACCESS_TOKEN  # personalized github access token

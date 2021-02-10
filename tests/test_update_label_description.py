@@ -54,8 +54,8 @@ def test_populate_empty_rdf():
     assert graph.__contains__(subject_2_same_label)
     assert graph.__contains__(subject_2_old_description)
 
-    converter.execute_synchronization(id=wikibase_id_1)
-    converter.execute_synchronization(id=wikibase_id_2)
+    converter.execute_synchronization(wb_id=wikibase_id_1)
+    converter.execute_synchronization(wb_id=wikibase_id_2)
 
     assert graph.__contains__(subject_2_new_description)
     assert not graph.__contains__(subject_2_old_description)  # updated

@@ -1,8 +1,7 @@
 import requests
 import re
 from rdflib import RDFS, Graph
-from rdfsync.util.string_util import get_namespace, get_triple_predicate_str, get_triple_subject_str, \
-    StringValidationError
+from rdfsync.util.string_util import get_namespace, get_triple_predicate_str, get_triple_subject_str, regex
 from rdflib import URIRef, Literal
 import xml.etree.ElementTree as ET
 from rdfsync.util.namespace_constants import default_rdf_namespaces
@@ -15,6 +14,23 @@ class Converter:
     preferred_format = ''
 
     def __init__(self, endpoint: str, day_num=100, input_format='ttl', graph=Graph()):
+        """
+
+        Parameters
+        ----------
+        api endpoint: endpoint url of your wikibase
+        day_num: number of days of last change in order to fetch the items changed
+        input_format: rdf format: "xml", "n3", "turtle", "nt", "pretty-xml", "trix", "trig" and "nquads"
+        graph: RDFLIB Graph()
+        """
+        # checks
+        if day_num < 1:
+            raise ValueError("number of days must be 1 or higher")
+        if not endpoint or re.match(regex, endpoint):
+            raise ValueError("wrong format of endpoint url")
+        if input_format not in ["xml", "n3", "turtle", "nt", "pretty-xml", "trix", "trig", "nquads", "ttl"]:
+            raise ValueError("wrong input format")
+        # assigning
         self.API_ENDPOINT = endpoint
         self.number_of_days = day_num
         self.graph = graph
@@ -28,28 +44,28 @@ class Converter:
         }
         return params
 
-    def get_params_of_wbgetentities(self, id):
+    def get_params_of_wbgetentities(self, wb_id):
         params = {
             'action': 'wbgetentities',
             'format': 'json',
-            'ids': id
+            'ids': wb_id
         }
         return params
 
-    def get_params_of_wbgetclaims(self, id):
+    def get_params_of_wbgetclaims(self, wb_id):
         params = {
             'action': 'wbgetclaims',
             'format': 'json',
-            'entity': id
+            'entity': wb_id
         }
         return params
 
-    def wbgetentity(self, id):
-        return requests.get(self.API_ENDPOINT, params=self.get_params_of_wbgetentities(id))
+    def wbgetentity(self, wb_id):
+        return requests.get(self.API_ENDPOINT, params=self.get_params_of_wbgetentities(wb_id))
 
-    def wbgetclaims(self, id):
+    def wbgetclaims(self, wb_id):
         claims = []
-        data = requests.get(self.API_ENDPOINT, params=self.get_params_of_wbgetclaims(id))
+        data = requests.get(self.API_ENDPOINT, params=self.get_params_of_wbgetclaims(wb_id))
         for property in data.json()['claims']:
             data = self.wbgetentity(property)
             if self.get_labels_of_item_or_property(data, property)['en']['value'] not in ['related link', 'same as']:
@@ -59,10 +75,10 @@ class Converter:
     def wbfeedrecentchanges(self):
         return requests.get(self.API_ENDPOINT, params=self.get_params_of_wbfeedrecentchanges())
 
-    def get_information_of_item_or_property_as_dictionary(self, id, information):
+    def get_information_of_item_or_property_as_dictionary(self, wb_id, information):
         language_value_dict = dict()
-        request = self.wbgetentity(id)
-        data = request.json()['entities'][id][information]
+        request = self.wbgetentity(wb_id)
+        data = request.json()['entities'][wb_id][information]
         for lang in data:
             def_lang = lang
             if str(lang) == str('es-formal'):
@@ -70,21 +86,15 @@ class Converter:
             language_value_dict[def_lang] = data[lang]['value']
         return language_value_dict
 
-    def get_information_of_item_or_property(self, request, id, information):
-        return request.json()['entities'][id][information]
+    def get_information_of_item_or_property(self, request, wb_id, information):
+        return request.json()['entities'][wb_id][information]
 
-    def get_labels_of_item_or_property(self, request, id):
-        return self.get_information_of_item_or_property(request, id, 'labels')
+    def get_labels_of_item_or_property(self, request, wb_id):
+        return self.get_information_of_item_or_property(request, wb_id, 'labels')
 
-    def get_descriptions_of_item_or_property(self, request, id):
-        return self.get_information_of_item_or_property(request, id, 'descriptions')
-
-    def get_aliases_of_item_or_property(self, request, id):
-        return self.get_information_of_item_or_property(request, id, 'aliases')
-
-    def get_related_link_of_a_wb_item_or_property(self, id):
+    def get_related_link_of_a_wb_item_or_property(self, wb_id):
         rl = ''
-        data = requests.get(self.API_ENDPOINT, params=self.get_params_of_wbgetclaims(id))
+        data = requests.get(self.API_ENDPOINT, params=self.get_params_of_wbgetclaims(wb_id))
         for property in data.json()['claims']:
             req = self.wbgetentity(property)
             if self.get_labels_of_item_or_property(req, property)['en']['value'] == 'related link':
@@ -109,15 +119,15 @@ class Converter:
                 claim_with_its_values[rl_of_claim] = rl_claim_values
         return claim_with_its_values
 
-    def execute_synchronization(self, id):
+    def execute_synchronization(self, wb_id):
         print('Sync in the wikibase <' + self.API_ENDPOINT + '>.')
         pattern = re.compile(r'\s+')  # no spaces
         # subject info
-        subject_rl = self.get_related_link_of_a_wb_item_or_property(id)
+        subject_rl = self.get_related_link_of_a_wb_item_or_property(wb_id)
         subject_name = re.sub(pattern, '', get_triple_subject_str(subject_rl))
         # name check
         if not subject_rl:
-            print('Please set related link of item/property with id <' + id + '> in order to start the sync.')
+            print('Please set related link of item/property with id <' + wb_id + '> in order to start the sync.')
             return
 
         print('## sync of the subject <' + subject_name + '> ##')
@@ -161,17 +171,17 @@ class Converter:
 
         # _______________________ SUBJECT WIKIBASE DATA ____________________#
         # copying claims of item in wikibase
-        for claim in self.wbgetclaims(id):
+        for claim in self.wbgetclaims(wb_id):
             claims_of_wb_item.append(str(self.get_related_link_of_a_wb_item_or_property(claim)))
-        claim_and_value_dictionary = self.get_related_link_of_values_of_a_claim_in_wb(id)
+        claim_and_value_dictionary = self.get_related_link_of_values_of_a_claim_in_wb(wb_id)
         # labels
-        labels_of_subject_wb = self.get_information_of_item_or_property_as_dictionary(id, 'labels')
-        descriptions_of_subject_wb = self.get_information_of_item_or_property_as_dictionary(id, 'descriptions')
+        labels_of_subject_wb = self.get_information_of_item_or_property_as_dictionary(wb_id, 'labels')
+        descriptions_of_subject_wb = self.get_information_of_item_or_property_as_dictionary(wb_id, 'descriptions')
         # _______________________                  ____________________#
 
         # _______________________ SUBJECT EXISTS IN WB AND NOT RDF ____________________#
         if not subjects_check.__contains__(str(subject_rl)):
-            self.create_new_triple(claim_and_value_dictionary, descriptions_of_subject_wb, id,
+            self.create_new_triple(claim_and_value_dictionary, descriptions_of_subject_wb, wb_id,
                                    labels_of_subject_wb, subject_name, subject_rl)
             return
         # _______________________                  ____________________#
@@ -224,13 +234,14 @@ class Converter:
                 print('deleting description of the language <' + descr_lang + '> of <'
                       + subject_name + '> because it does not exist in wb')
                 self.graph.remove(
-                    (URIRef(subject_rl), RDFS.comment, Literal(descriptions_of_subject_rdf[descr_lang], lang=descr_lang)))
+                    (URIRef(subject_rl), RDFS.comment,
+                     Literal(descriptions_of_subject_rdf[descr_lang], lang=descr_lang)))
         # _______________________                  ____________________#
 
         # _______________________ PREDICATES and OBJECTS / CLAIMS ____________________#
         # comparing predicates
         if set(claims_of_wb_item) != set(predicates_of_subject):
-            print('different predicates in the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
+            print('different predicates in the item/subject <' + subject_name + '> with wikibase ID <' + wb_id + '>')
 
             # deletion: predicate exists in rdf but is not in wb.
             set_of_predicates = set(predicates_of_subject)
@@ -252,30 +263,30 @@ class Converter:
                         self.graph.add((URIRef(subject_rl), URIRef(predicate_to_add),
                                         URIRef(value_of_claim)))
         else:
-            print('same predicates in the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
+            print('same predicates in the item/subject <' + subject_name + '> with wikibase ID <' + wb_id + '>')
 
         print('comparing the objects in rdf to claim values in wikibase')
         if claim_and_value_dictionary == predicate_and_object_dictionary:
-            print('same objects in the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
+            print('same objects in the item/subject <' + subject_name + '> with wikibase ID <' + wb_id + '>')
         else:
             print(
-                'detecting if different objects in the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
+                'detecting if different objects in the item/subject <' + subject_name + '> with wikibase ID <' + wb_id + '>')
             for predicate_to_update in claim_and_value_dictionary.keys():
                 # updating the graph with the new value of the object
                 if predicate_to_update in predicate_and_object_dictionary.keys():
                     if str(predicate_and_object_dictionary[predicate_to_update]) != str(
                             claim_and_value_dictionary[predicate_to_update]):
                         print('updating object of the predicate <' + predicate_to_update + '>in the item/subject <'
-                              + subject_name + '> with wikibase ID <' + id + '>')
+                              + subject_name + '> with wikibase ID <' + wb_id + '>')
                         # removing old object
                         self.graph.remove((URIRef(subject_rl), URIRef(predicate_to_update), None))
                         # updating with new value
                         for value_of_claim in claim_and_value_dictionary[str(predicate_to_update)]:
                             self.graph.add((URIRef(subject_rl), URIRef(predicate_to_update), URIRef(value_of_claim)))
 
-    def create_new_triple(self, claim_and_value_dictionary, descriptions_of_subject_wb, id, labels_of_subject_wb,
+    def create_new_triple(self, claim_and_value_dictionary, descriptions_of_subject_wb, wb_id, labels_of_subject_wb,
                           subject_name, subject_rl):
-        print('The wb item/property with ID <' + id + '> does not exist in rdf file.')
+        print('The wb item/property with ID <' + wb_id + '> does not exist in rdf file.')
         print('Creating a new triple with its data.')
         # adding new namespaces if they doesn't exist
         self.binding_namespace_of_graph(subject_rl)
@@ -293,7 +304,7 @@ class Converter:
             # adding new namespaces if they doesn't exist
             self.binding_namespace_of_graph(new_predicate)
             print(
-                'new predicate <' + new_predicate + '> for the item/subject <' + subject_name + '> with wikibase ID <' + id + '>')
+                'new predicate <' + new_predicate + '> for the item/subject <' + subject_name + '> with wikibase ID <' + wb_id + '>')
             for value_of_claim in claim_and_value_dictionary[str(new_predicate)]:
                 # adding new namespaces if they doesn't exist
                 self.binding_namespace_of_graph(value_of_claim)

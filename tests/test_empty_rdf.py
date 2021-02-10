@@ -43,7 +43,7 @@ triple_8_non_existent = ((URIRef('http://www.purl.org/hercules/asio/core#Researc
 
 def test_populate_empty_rdf():
     assert len(graph) == 0
-    converter.execute_synchronization(id=wikibase_id)
+    converter.execute_synchronization(wb_id=wikibase_id)
     assert graph.__contains__(triple_1)
     assert graph.__contains__(triple_2)
     assert graph.__contains__(triple_3)

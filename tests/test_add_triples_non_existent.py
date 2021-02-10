@@ -36,7 +36,7 @@ def test_populate_empty_rdf():
     assert graph.__contains__(triple_3_existent)
     assert not graph.__contains__(triple_4_non_existent)
 
-    converter.execute_synchronization(id=wikibase_id)
+    converter.execute_synchronization(wb_id=wikibase_id)
 
     assert graph.__contains__(triple_1_new_add)
     assert graph.__contains__(triple_5_new_add)

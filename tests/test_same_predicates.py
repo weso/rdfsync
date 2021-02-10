@@ -34,7 +34,7 @@ def test_populate_empty_rdf():
     assert graph.__contains__(subject_same_description)
     assert graph.__contains__(subject_same_triple)
 
-    converter.execute_synchronization(id=wikibase_id)
+    converter.execute_synchronization(wb_id=wikibase_id)
 
     assert len(graph) == 3
     assert not graph.__contains__(triple_non_existent)

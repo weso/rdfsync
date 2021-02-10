@@ -18,6 +18,7 @@ coverage.xml
 run_codecov.sh
 
 rdfsync/secret.py
+rdfsync/synchronization.py
 
 # notebook checkpoints
 .ipynb_checkpoints

@@ -17,7 +17,7 @@ docs/sphinx/build
 coverage.xml
 run_codecov.sh
 
-rdfsync/secret.py
+synchronization.py
 
 # notebook checkpoints
 .ipynb_checkpoints

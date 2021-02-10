@@ -126,7 +126,7 @@ class Converter:
         return claim_with_its_values
 
     def execute_synchronization(self, wb_id: str):
-        if (not wb_id.startswith("P") or not wb_id.startswith("Q")) and not re.search(r'\d+$', wb_id):
+        if re.match(r'(Q|P)\d+\b', wb_id) is None:
             logger.error("wrong id of wikibase Item or Property")
             raise ValueError("wrong id of wikibase Item or Property")
 
@@ -296,6 +296,7 @@ class Converter:
                         # updating with new value
                         for value_of_claim in claim_and_value_dictionary[str(predicate_to_update)]:
                             self.graph.add((URIRef(subject_rl), URIRef(predicate_to_update), URIRef(value_of_claim)))
+        return self.graph
 
     def create_new_triple(self, claim_and_value_dictionary, descriptions_of_subject_wb, wb_id, labels_of_subject_wb,
                           subject_name, subject_rl):

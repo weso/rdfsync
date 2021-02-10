@@ -50,7 +50,8 @@ def create_pull_request_in_repo(repo, title, body, head, base):
         logger.error(msg="Error while creating a PR in Github")
 
 
-def update_github_repo(github_token, repository_name, source_branch, target_branch, file_name, file_content):
+def update_github_repo(github_token: str, repository_name: str, source_branch: str, target_branch: str, file_name: str,
+                       file_content):
     # connecting
     g = connect_to_github(github_token)  # your github access token
 

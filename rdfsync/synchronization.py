@@ -1,10 +1,10 @@
+from secret import GITHUB_ACCESS_TOKEN, GITHUB_TARGET_REPO, SOURCE_BRANCH, TARGET_BRANCH, MEDIAWIKI_API_URL, FILE_PATH
 from conversion import Converter
-from secret import GITHUB_ACCESS_TOKEN, GITHUB_TARGET_REPO, SOURCE_BRANCH, TARGET_BRANCH, MEDIAWIKI_API_URL
 from github_connection import *
 import ntpath
 
 # graph ops
-file_path = 'https://raw.githubusercontent.com/weso/rdfsync/master/tests/data/synchronization/ex1.ttl'
+file_path = FILE_PATH  # your file path
 
 # algorithm execution
 converter = Converter(endpoint=MEDIAWIKI_API_URL, input_format='ttl')  # http://XXX/w/api.php

@@ -125,7 +125,11 @@ class Converter:
                 claim_with_its_values[rl_of_claim] = rl_claim_values
         return claim_with_its_values
 
-    def execute_synchronization(self, wb_id):
+    def execute_synchronization(self, wb_id: str):
+        if (not wb_id.startswith("P") or not wb_id.startswith("Q")) and not re.search(r'\d+$', wb_id):
+            logger.error("wrong id of wikibase Item or Property")
+            raise ValueError("wrong id of wikibase Item or Property")
+
         logger.warning('Sync in the wikibase <' + self.API_ENDPOINT + '>.')
         pattern = re.compile(r'\s+')  # no spaces
         # subject info

@@ -18,4 +18,4 @@ coverage:
         threshold: 5%
 
 ignore:
-  - "rdfsync/githubcon/github_connection.py"
+  - "*/githubcon/github_connection.py"

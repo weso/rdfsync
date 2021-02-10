@@ -70,9 +70,8 @@ def update_github_repo(github_token: str, repository_name: str, source_branch: s
 
     # creating a ppull request from newly added branch
     create_pull_request_in_repo(repo=current_repository,
-                                title="Creating a pull request from " + target_branch + " to " + source_branch
-                                      + " using RDFSYNC",
-                                # PR name
-                                body="Pull Request with the new sync file",  # PR description
+                                title="Pull Request from RDFSYNC",  # PR name
+                                body="Creating a pull request from " + target_branch + " to " + source_branch
+                                     + " using RDFSYNC",  # PR description
                                 head=target_branch,
                                 base=source_branch)

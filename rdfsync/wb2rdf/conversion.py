@@ -40,6 +40,12 @@ class Converter:
         self.preferred_format = input_format
 
     def get_params_of_wbfeedrecentchanges(self):
+        """
+
+        Returns
+        -------
+        parameters of feedrecentchanges from api: action, format and number of days
+        """
         params = {
             'action': 'feedrecentchanges',
             'format': 'json',
@@ -49,6 +55,17 @@ class Converter:
 
     @staticmethod
     def get_params_of_wbgetentities(wb_id):
+        """
+
+        Parameters
+        ----------
+        wb_id id of wikibase item or property
+
+        Returns
+        -------
+        parameters of wbgetentities from api: action, format and ids ( id of item and property)
+
+        """
         params = {
             'action': 'wbgetentities',
             'format': 'json',
@@ -58,6 +75,17 @@ class Converter:
 
     @staticmethod
     def get_params_of_wbgetclaims(wb_id):
+        """
+
+        Parameters
+        ----------
+        wb_id id of wikibase item or property
+
+        Returns
+        -------
+        parameters of wbgetclaims from api: action, format and entity ( id of item and property)
+
+        """
         params = {
             'action': 'wbgetclaims',
             'format': 'json',
@@ -66,9 +94,31 @@ class Converter:
         return params
 
     def wbgetentity(self, wb_id):
+        """
+
+        Parameters
+        ----------
+        wb_id id of wikibase item or property
+
+        Returns
+        -------
+        response of wbgetentity
+
+        """
         return requests.get(self.API_ENDPOINT, params=self.get_params_of_wbgetentities(wb_id))
 
     def wbgetclaims(self, wb_id):
+        """
+
+        Parameters
+        ----------
+        wb_id id of wikibase item or property
+
+        Returns
+        -------
+        response of wbgetclaims transformed to a list of claims
+
+        """
         claims = []
         data = requests.get(self.API_ENDPOINT, params=self.get_params_of_wbgetclaims(wb_id))
         for wb_property in data.json()['claims']:
@@ -78,9 +128,31 @@ class Converter:
         return claims
 
     def wbfeedrecentchanges(self):
+        """
+
+        Parameters
+        ----------
+        wb_id id of wikibase item or property
+
+        Returns
+        -------
+        response of wbfeedrecentchanges
+
+        """
         return requests.get(self.API_ENDPOINT, params=self.get_params_of_wbfeedrecentchanges())
 
     def get_information_of_item_or_property_as_dictionary(self, wb_id, information):
+        """
+
+        Parameters
+        ----------
+        wb_id: item or property ID
+        information: labels or descriptions
+
+        Returns
+        -------
+        dictionary of language and the value of a label or description
+        """
         language_value_dict = dict()
         request = self.wbgetentity(wb_id)
         data = request.json()['entities'][wb_id][information]
@@ -93,12 +165,45 @@ class Converter:
 
     @staticmethod
     def get_information_of_item_or_property(request, wb_id, information):
+        """
+
+        Parameters
+        ----------
+        request: request
+        wb_id: item or property ID
+        information: labels or descriptions
+
+        Returns
+        -------
+        response consisting of labels or descriptions of wb_id
+        """
         return request.json()['entities'][wb_id][information]
 
     def get_labels_of_item_or_property(self, request, wb_id):
+        """
+
+        Parameters
+        ----------
+        request: python request
+        wb_id: item or prop ID
+
+        Returns
+        -------
+        labels of wb_id
+        """
         return self.get_information_of_item_or_property(request, wb_id, 'labels')
 
     def get_related_link_of_a_wb_item_or_property(self, wb_id):
+        """
+
+        Parameters
+        ----------
+        wb_id: item or prop ID
+
+        Returns
+        -------
+        related link of wb_id
+        """
         rl = ''
         data = requests.get(self.API_ENDPOINT, params=self.get_params_of_wbgetclaims(wb_id))
         for wb_property in data.json()['claims']:
@@ -108,6 +213,16 @@ class Converter:
         return rl
 
     def get_related_link_of_values_of_a_claim_in_wb(self, claim_id):
+        """
+
+        Parameters
+        ----------
+        claim_id: item or prop ID
+
+        Returns
+        -------
+        a dictionary consisting of related link of the claims as keys and the claim values as values
+        """
         claim_with_its_values = dict()
         data = requests.get(self.API_ENDPOINT, params=self.get_params_of_wbgetclaims(claim_id))
         for wb_property in data.json()['claims']:
@@ -126,7 +241,21 @@ class Converter:
         return claim_with_its_values
 
     def execute_synchronization(self, wb_id: str):
-        if re.match(r'(Q|P)\d+\b', wb_id) is None:
+        """
+        the main algorithm of rdfsync. compares the content of a wb item or property with the base rdf file as graph.
+        consists of comparing the related link of an item or property in wikibase and comparing with the link of
+        a subject in rdf. if they are the same, the sync begins; comparing the wb claims with rdf predicates and the wb
+        claim values with rdf objects. if they are different; either an update occurs if the same predicates
+        or a deletion in rdf if a predicate does not exist in its form in wb.
+        Parameters
+        ----------
+        wb_id: item or property id
+
+        Returns
+        -------
+        the resulting rdf graph
+        """
+        if re.match(r'([QP])\d+\b', wb_id) is None:
             logger.error("wrong id of wikibase Item or Property")
             raise ValueError("wrong id of wikibase Item or Property")
 
@@ -300,6 +429,21 @@ class Converter:
 
     def create_new_triple(self, claim_and_value_dictionary, descriptions_of_subject_wb, wb_id, labels_of_subject_wb,
                           subject_name, subject_rl):
+        """
+        creates new triple if it does not exist in rdf
+        Parameters
+        ----------
+        claim_and_value_dictionary: the dictionary of claims and their values of a wb item or property
+        descriptions_of_subject_wb: dict of descriptions and languages used in wikibase of wb item or prop
+        wb_id: id of wb prop or item
+        labels_of_subject_wb: dict of labels and languages used in wikibase of wb item or prop
+        subject_name: subject name in rdf
+        subject_rl: subject related link in wikibase or rdf
+
+        Returns
+        -------
+        nothing, updates the graph
+        """
         logger.warning('The wb item/property with ID <' + wb_id + '> does not exist in rdf file.')
         logger.info('Creating a new triple with its data.')
         # adding new namespaces if they doesn't exist
@@ -326,12 +470,28 @@ class Converter:
                 self.graph.add((URIRef(subject_rl), URIRef(new_predicate), URIRef(value_of_claim)))
 
     def binding_namespace_of_graph(self, related_link_of_item):
+        """
+        binds a namespace in rdf graph if it does not exist in the default namespace dictionary
+        Parameters
+        ----------
+        related_link_of_item: link of an item or property
+
+        Returns
+        -------
+        nothing, updates the namespaces of a graph
+        """
         if str(get_namespace(related_link_of_item)) not in dict(self.graph.namespaces()).values():
             for key, namespace in default_rdf_namespaces.items():
                 if str(namespace) == str(get_namespace(related_link_of_item)):
                     self.graph.bind(str(key), str(namespace))
 
     def get_items_properties_to_sync(self):
+        """
+
+        Returns
+        -------
+        set of items/properties that suffered change in the last number_of_days passed as param in the class creation
+        """
         recent_feed_in_xml = self.wbfeedrecentchanges().text
         doc = ET.fromstring(recent_feed_in_xml)
         properties_or_items = doc.findall('.//channel//item//title')
@@ -344,8 +504,29 @@ class Converter:
         return final_sync_list
 
     def serialize_file(self, output_format='ttl'):
+        """
+        returns a graph serialized in a specific format.
+        used mainly for debug purposes
+        Parameters
+        ----------
+        output_format: output format of a rdf graph
+
+        Returns
+        -------
+        string format of a rdf graph
+        """
         return self.graph.serialize(format=output_format)
 
     def read_file_and_create_graph(self, file_path: str):
+        """
+        reads a rdf file and converts it to rdflib graph
+        Parameters
+        ----------
+        file_path: path of the rdf file
+
+        Returns
+        -------
+        the resulting graph of the rdf file
+        """
         self.graph.parse(file_path, format="ttl")  # currently using ttl. change it to your format.
         return self.graph

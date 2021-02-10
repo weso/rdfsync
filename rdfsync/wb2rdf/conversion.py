@@ -1,11 +1,15 @@
 import requests
 import re
 from rdflib import RDFS, Graph
-from rdfsync.util.string_util import get_namespace, get_triple_predicate_str, get_triple_subject_str, regex
+from rdfsync.util.string_util import get_namespace, get_triple_predicate_str, get_triple_subject_str
 from rdflib import URIRef, Literal
 import xml.etree.ElementTree as ET
 from rdfsync.util.namespace_constants import default_rdf_namespaces
+import logging
 
+# logger settings
+logging.basicConfig()
+logger = logging.getLogger("conversion")
 
 class Converter:
     API_ENDPOINT = ''
@@ -42,7 +46,8 @@ class Converter:
         }
         return params
 
-    def get_params_of_wbgetentities(self, wb_id):
+    @staticmethod
+    def get_params_of_wbgetentities(wb_id):
         params = {
             'action': 'wbgetentities',
             'format': 'json',
@@ -50,7 +55,8 @@ class Converter:
         }
         return params
 
-    def get_params_of_wbgetclaims(self, wb_id):
+    @staticmethod
+    def get_params_of_wbgetclaims(wb_id):
         params = {
             'action': 'wbgetclaims',
             'format': 'json',
@@ -64,10 +70,10 @@ class Converter:
     def wbgetclaims(self, wb_id):
         claims = []
         data = requests.get(self.API_ENDPOINT, params=self.get_params_of_wbgetclaims(wb_id))
-        for property in data.json()['claims']:
-            data = self.wbgetentity(property)
-            if self.get_labels_of_item_or_property(data, property)['en']['value'] not in ['related link', 'same as']:
-                claims.append(property)
+        for wb_property in data.json()['claims']:
+            data = self.wbgetentity(wb_property)
+            if self.get_labels_of_item_or_property(data, wb_property)['en']['value'] not in ['related link', 'same as']:
+                claims.append(wb_property)
         return claims
 
     def wbfeedrecentchanges(self):
@@ -84,7 +90,8 @@ class Converter:
             language_value_dict[def_lang] = data[lang]['value']
         return language_value_dict
 
-    def get_information_of_item_or_property(self, request, wb_id, information):
+    @staticmethod
+    def get_information_of_item_or_property(request, wb_id, information):
         return request.json()['entities'][wb_id][information]
 
     def get_labels_of_item_or_property(self, request, wb_id):
@@ -93,25 +100,25 @@ class Converter:
     def get_related_link_of_a_wb_item_or_property(self, wb_id):
         rl = ''
         data = requests.get(self.API_ENDPOINT, params=self.get_params_of_wbgetclaims(wb_id))
-        for property in data.json()['claims']:
-            req = self.wbgetentity(property)
-            if self.get_labels_of_item_or_property(req, property)['en']['value'] == 'related link':
-                rl = data.json()['claims'][property][0]['mainsnak']['datavalue']['value']
+        for wb_property in data.json()['claims']:
+            req = self.wbgetentity(wb_property)
+            if self.get_labels_of_item_or_property(req, wb_property)['en']['value'] == 'related link':
+                rl = data.json()['claims'][wb_property][0]['mainsnak']['datavalue']['value']
         return rl
 
     def get_related_link_of_values_of_a_claim_in_wb(self, claim_id):
         claim_with_its_values = dict()
         data = requests.get(self.API_ENDPOINT, params=self.get_params_of_wbgetclaims(claim_id))
-        for property in data.json()['claims']:
-            req = self.wbgetentity(property)
-            rl_of_claim = self.get_related_link_of_a_wb_item_or_property(property)
-            if self.get_labels_of_item_or_property(req, property)['en']['value'] != 'related link' and \
-                    self.get_labels_of_item_or_property(req, property)['en']['value'] != 'same as':
+        for wb_property in data.json()['claims']:
+            req = self.wbgetentity(wb_property)
+            rl_of_claim = self.get_related_link_of_a_wb_item_or_property(wb_property)
+            if self.get_labels_of_item_or_property(req, wb_property)['en']['value'] != 'related link' and \
+                    self.get_labels_of_item_or_property(req, wb_property)['en']['value'] != 'same as':
                 index = 0
                 rl_claim_values = []
-                while index < len(data.json()['claims'][property]):
+                while index < len(data.json()['claims'][wb_property]):
                     link = self.get_related_link_of_a_wb_item_or_property(
-                        data.json()['claims'][property][index]['mainsnak']['datavalue']['value']['id'])
+                        data.json()['claims'][wb_property][index]['mainsnak']['datavalue']['value']['id'])
                     rl_claim_values.append(link)
                     index += 1
                 claim_with_its_values[rl_of_claim] = rl_claim_values
@@ -145,25 +152,25 @@ class Converter:
 
         # _______________________ SUBJECT RDF DATA ____________________#
         # getting the predicates and objects in the graph for the subject searched
-        for subject, predicate, object in self.graph:
+        for subject, predicate, rdf_object in self.graph:
             if str(subject) == str(subject_rl):
                 # checking if the subject really exists in rdf file
                 subjects_check.append(str(subject))
 
                 # labels and comments ( label and description in wb)
                 if str(get_triple_predicate_str(predicate)) == 'label':
-                    language_of_label = repr(object).split("lang='")[1].split("')")[0]
-                    labels_of_subject_rdf[language_of_label] = str(object)
+                    language_of_label = repr(rdf_object).split("lang='")[1].split("')")[0]
+                    labels_of_subject_rdf[language_of_label] = str(rdf_object)
                 elif str(get_triple_predicate_str(predicate)) == 'comment':
-                    language_of_descr = repr(object).split("lang='")[1].split("')")[0]
-                    descriptions_of_subject_rdf[language_of_descr] = str(object)
+                    language_of_descr = repr(rdf_object).split("lang='")[1].split("')")[0]
+                    descriptions_of_subject_rdf[language_of_descr] = str(rdf_object)
                 else:
                     predicates_of_subject.append(str(predicate))
                     objects = []
                     # if key already exists, we append the objects
                     if str(predicate) in predicate_and_object_dictionary:
                         objects = predicate_and_object_dictionary[str(predicate)]
-                    objects.append(str(object))
+                    objects.append(str(rdf_object))
                     predicate_and_object_dictionary[str(predicate)] = objects
         # _______________________                  ____________________#
 
@@ -267,8 +274,8 @@ class Converter:
         if claim_and_value_dictionary == predicate_and_object_dictionary:
             print('same objects in the item/subject <' + subject_name + '> with wikibase ID <' + wb_id + '>')
         else:
-            print(
-                'detecting if different objects in the item/subject <' + subject_name + '> with wikibase ID <' + wb_id + '>')
+            print('detecting if different objects in the item/subject <' + subject_name
+                  + '> with wikibase ID <' + wb_id + '>')
             for predicate_to_update in claim_and_value_dictionary.keys():
                 # updating the graph with the new value of the object
                 if predicate_to_update in predicate_and_object_dictionary.keys():
@@ -301,8 +308,8 @@ class Converter:
         for new_predicate in claim_and_value_dictionary.keys():
             # adding new namespaces if they doesn't exist
             self.binding_namespace_of_graph(new_predicate)
-            print(
-                'new predicate <' + new_predicate + '> for the item/subject <' + subject_name + '> with wikibase ID <' + wb_id + '>')
+            print('new predicate <' + new_predicate + '> for the item/subject <' + subject_name
+                  + '> with wikibase ID <' + wb_id + '>')
             for value_of_claim in claim_and_value_dictionary[str(new_predicate)]:
                 # adding new namespaces if they doesn't exist
                 self.binding_namespace_of_graph(value_of_claim)
@@ -321,8 +328,8 @@ class Converter:
         properties_or_items = doc.findall('.//channel//item//title')
         to_update_list = set()
         for poi in properties_or_items:
-            id = poi.text.split(':')[1]
-            to_update_list.add(id)
+            wb_id = poi.text.split(':')[1]
+            to_update_list.add(wb_id)
         final_sync_list = set(to_update_list)
         print('The items/properties to sync are: ' + str(final_sync_list))
         return final_sync_list

@@ -26,7 +26,7 @@ class Converter:
         # checks
         if day_num < 1:
             raise ValueError("number of days must be 1 or higher")
-        if not endpoint or re.match(regex, endpoint):
+        if not endpoint or not re.match(regex, endpoint):
             raise ValueError("wrong format of endpoint url")
         if input_format not in ["xml", "n3", "turtle", "nt", "pretty-xml", "trix", "trig", "nquads", "ttl"]:
             raise ValueError("wrong input format")

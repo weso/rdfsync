@@ -1,7 +1,3 @@
-ignore:
-  - "/rdfsync/synchronization.py"
-  - "/rdfsync/githubcon/github_connection.py"
-
 codecov:
   notify:
     require_ci_to_pass: yes
@@ -20,3 +16,6 @@ coverage:
       default:
         target: auto
         threshold: 5%
+
+ignore:
+  - "rdfsync/githubcon/github_connection.py"

@@ -11,12 +11,12 @@ An algorithm to synchronise data between the ontology files and a given Wikibase
 Copy the following code an change the constants to your wikibase and github correct information.
 
 ```python
-from conversion import Converter
-from github_connection import update_github_repo
+from rdfsync.wb2rdf.conversion import Converter
+from rdfsync.githubcon.github_connection import update_github_repo
 import ntpath
 
 # graph ops
-file_path = FILE_PATH  # your file path
+file_path = FILE_PATH  # your rdf file path
 
 # algorithm execution
 converter = Converter(endpoint=MEDIAWIKI_API_URL, input_format='ttl')  # http://XXX/w/api.php

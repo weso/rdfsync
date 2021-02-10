@@ -19,6 +19,7 @@ run_codecov.sh
 
 rdfsync/secret.py
 rdfsync/synchronization.py
+tests/test_github_connection.py
 
 # notebook checkpoints
 .ipynb_checkpoints

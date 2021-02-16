@@ -525,6 +525,7 @@ class Converter:
         if re.match(valid_url_regex, value_of_claim):
             self.graph.add(
                 (final_subject_to_add, URIRef(predicate_to_add), URIRef(value_of_claim)))
+            return
         else:
             try:
                 # int
@@ -557,10 +558,10 @@ class Converter:
                             if is_date(final_value_to_object):
                                 self.graph.add(
                                     (final_subject_to_add, URIRef(predicate_to_add),
-                                     Literal(final_value_to_object, datatype=XSD.date)))
+                                     Literal(final_value_to_object, datatype=XSD.datetime)))
                                 return
                         except ValueError:
-                            # is date
+                            # is string
                             final_value_to_object = str(value_of_claim)
                             self.graph.add(
                                 (final_subject_to_add, URIRef(predicate_to_add),

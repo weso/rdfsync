@@ -100,7 +100,7 @@ def is_date(string, fuzzy=False):
         return True
 
     except ValueError:
-        return False
+        raise ValueError("invalid date format")
 
 
 def is_time_format(input):
@@ -108,4 +108,4 @@ def is_time_format(input):
         time.strptime(input, '%H:%M')
         return True
     except ValueError:
-        return False
+        raise ValueError("invalid time format")

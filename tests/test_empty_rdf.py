@@ -53,6 +53,22 @@ triple_genid_1 = ((URIRef('http://purl.org/hercules/asio/core#/genid/cb0'),
                    URIRef('http://www.w3.org/2002/07/owl#maxCardinality'),
                    Literal('1', datatype=XSD.integer)))
 
+triple_genid_2 = ((URIRef('http://purl.org/hercules/asio/core#/genid/cb0'),
+                   URIRef('http://www.w3.org/2002/07/owl#maxCardinality'),
+                   Literal('2.0', datatype=XSD.long)))
+
+triple_genid_3 = ((URIRef('http://purl.org/hercules/asio/core#/genid/cb0'),
+                   URIRef('http://www.w3.org/2002/07/owl#maxCardinality'),
+                   Literal('13:15', datatype=XSD.time)))
+
+triple_genid_4 = ((URIRef('http://purl.org/hercules/asio/core#/genid/cb0'),
+                   URIRef('http://www.w3.org/2002/07/owl#maxCardinality'),
+                   Literal('2018-12-19', datatype=XSD.datetime)))
+
+triple_genid_5 = ((URIRef('http://purl.org/hercules/asio/core#/genid/cb0'),
+                   URIRef('http://www.w3.org/2002/07/owl#maxCardinality'),
+                   Literal('maximum of cardinality', datatype=XSD.string)))
+
 
 def test_populate_empty_rdf():
     converter = Converter(endpoint=MEDIAWIKI_API_URL, input_format='ttl', graph=graph)
@@ -80,9 +96,13 @@ def test_populate_empty_rdf_with_bnodes():
 
 
 def test_populate_empty_rdf_with_different_types():
-    graph3 = Graph()
-    converter = Converter(endpoint=MEDIAWIKI_API_URL, input_format='ttl', graph=graph3)
-    assert len(graph3) == 0
+    graph4 = Graph()
+    converter = Converter(endpoint=MEDIAWIKI_API_URL, input_format='ttl', graph=graph4)
+    assert len(graph4) == 0
     converter.execute_synchronization(wb_id=wikibase_id_3)
-    assert graph3.__contains__(triple_genid_1)
-    assert len(graph3) == 4
+    assert graph4.__contains__(triple_genid_1)
+    assert graph4.__contains__(triple_genid_2)
+    assert graph4.__contains__(triple_genid_3)
+    assert graph4.__contains__(triple_genid_4)
+    assert graph4.__contains__(triple_genid_5)
+    assert len(graph4) == 8

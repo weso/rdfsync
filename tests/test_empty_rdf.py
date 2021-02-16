@@ -92,17 +92,17 @@ def test_populate_empty_rdf_with_bnodes():
     converter.execute_synchronization(wb_id=wikibase_id_2)
     assert graph2.__contains__(triple_1_bnode)
     assert graph2.__contains__(triple_2_bnode)
-    assert len(graph2) == 7  # plus the label plus the bnodes cannot be tested because random
+    assert len(graph2) == 11  # plus the label plus the bnodes cannot be tested because random
 
 
 def test_populate_empty_rdf_with_different_types():
-    graph4 = Graph()
-    converter = Converter(endpoint=MEDIAWIKI_API_URL, input_format='ttl', graph=graph4)
-    assert len(graph4) == 0
+    graph3 = Graph()
+    converter = Converter(endpoint=MEDIAWIKI_API_URL, input_format='ttl', graph=graph3)
+    assert len(graph3) == 0
     converter.execute_synchronization(wb_id=wikibase_id_3)
-    assert graph4.__contains__(triple_genid_1)
-    assert graph4.__contains__(triple_genid_2)
-    assert graph4.__contains__(triple_genid_3)
-    assert graph4.__contains__(triple_genid_4)
-    assert graph4.__contains__(triple_genid_5)
-    assert len(graph4) == 8
+    assert graph3.__contains__(triple_genid_1)
+    assert graph3.__contains__(triple_genid_2)
+    assert graph3.__contains__(triple_genid_3)
+    assert graph3.__contains__(triple_genid_4)
+    assert graph3.__contains__(triple_genid_5)
+    assert len(graph3) == 8

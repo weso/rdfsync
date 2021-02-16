@@ -1,7 +1,7 @@
 import requests
 import re
-from rdflib import RDFS, Graph
-from rdfsync.util.string_util import get_namespace, get_triple_predicate_str, get_triple_subject_str
+from rdflib import RDFS, Graph, BNode
+from rdfsync.util.string_util import get_namespace, get_triple_predicate_str, get_triple_subject_str, valid_url_regex
 from rdflib import URIRef, Literal
 import xml.etree.ElementTree as ET
 from rdfsync.util.namespace_constants import default_rdf_namespaces
@@ -92,6 +92,42 @@ class Converter:
             'entity': wb_id
         }
         return params
+
+    @staticmethod
+    def get_params_of_wbsearchentities(label_of_item):
+        """
+
+        Parameters
+        ----------
+        label_of_item label of a wb item
+
+        Returns
+        -------
+        parameters of wbsearchentities from api: action, format, search, language and type
+
+        """
+        params = {
+            'action': 'wbsearchentities',
+            'format': 'json',
+            'search': label_of_item,
+            'language': 'en',
+            'type': 'item'
+        }
+        return params
+
+    def wbsearchentities(self, label):
+        """
+
+        Parameters
+        ----------
+        label of a wb item
+
+        Returns
+        -------
+        response of wbsearchentities
+
+        """
+        return requests.get(self.API_ENDPOINT, params=self.get_params_of_wbsearchentities(label))
 
     def wbgetentity(self, wb_id):
         """
@@ -204,6 +240,8 @@ class Converter:
         -------
         related link of wb_id
         """
+        if re.match(r'([QP])\d+\b', wb_id) is None:
+            return str(wb_id)  # it is not a wikibase item or property
         rl = ''
         data = requests.get(self.API_ENDPOINT, params=self.get_params_of_wbgetclaims(wb_id))
         for wb_property in data.json()['claims']:
@@ -233,8 +271,13 @@ class Converter:
                 index = 0
                 rl_claim_values = []
                 while index < len(data.json()['claims'][wb_property]):
-                    link = self.get_related_link_of_a_wb_item_or_property(
-                        data.json()['claims'][wb_property][index]['mainsnak']['datavalue']['value']['id'])
+                    link = ""
+                    try:
+                        link = self.get_related_link_of_a_wb_item_or_property(
+                            data.json()['claims'][wb_property][index]['mainsnak']['datavalue']['value']['id'])
+                    except TypeError:
+                        link = self.get_related_link_of_a_wb_item_or_property(
+                            data.json()['claims'][wb_property][index]['mainsnak']['datavalue']['value'])
                     rl_claim_values.append(link)
                     index += 1
                 claim_with_its_values[rl_of_claim] = rl_claim_values
@@ -284,6 +327,10 @@ class Converter:
         # subject properties in wb
         claims_of_wb_item = []
 
+        # anonymous nodes
+        bnodes_of_rdf = dict()
+        bnodes_of_wb = dict()
+
         # _______________________ SUBJECT RDF DATA ____________________#
         # getting the predicates and objects in the graph for the subject searched
         for subject, predicate, rdf_object in self.graph:
@@ -304,16 +351,56 @@ class Converter:
                     # if key already exists, we append the objects
                     if str(predicate) in predicate_and_object_dictionary:
                         objects = predicate_and_object_dictionary[str(predicate)]
-                    objects.append(str(rdf_object))
+                    objects.append(rdf_object)
                     predicate_and_object_dictionary[str(predicate)] = objects
+
         # _______________________                  ____________________#
+        # _______________________ SEPARATING BNODES from NON BNODES in RDF ____________________#
+        po_temp_dict = dict()
+        for prdct in predicate_and_object_dictionary.keys():
+            for objct in predicate_and_object_dictionary[str(prdct)]:
+                if type(objct) == BNode:
+                    objects = []
+                    if str(prdct) in bnodes_of_rdf:
+                        objects = bnodes_of_rdf[str(prdct)]
+                    objects.append(objct)
+                    bnodes_of_rdf[str(prdct)] = objects
+                else:
+                    objects_non_bnodes = []
+                    if str(prdct) in po_temp_dict:
+                        objects_non_bnodes = po_temp_dict[str(prdct)]
+                    objects_non_bnodes.append(objct)
+                    po_temp_dict[str(prdct)] = objects_non_bnodes
+        predicate_and_object_dictionary = po_temp_dict
+        # ________________________       ____________________________________#
 
         # _______________________ SUBJECT WIKIBASE DATA ____________________#
         # copying claims of item in wikibase
         for claim in self.wbgetclaims(wb_id):
             claims_of_wb_item.append(str(self.get_related_link_of_a_wb_item_or_property(claim)))
         claim_and_value_dictionary = self.get_related_link_of_values_of_a_claim_in_wb(wb_id)
-        # labels
+        # _______________________                  ____________________#
+        # _______________________ SEPARATING BNODES from NON BNODES in RDF ____________________#
+        cv_temp_dict = dict()
+        for clm in claim_and_value_dictionary.keys():
+            for vlu in claim_and_value_dictionary[str(clm)]:
+                if str(vlu).__contains__("/genid/"):
+                    objects = []
+                    if str(clm) in bnodes_of_wb:
+                        objects = bnodes_of_wb[str(clm)]
+                    objects.append(str(vlu))
+                    bnodes_of_wb[str(clm)] = objects
+                else:
+                    objects_non_bnodes = []
+                    if str(clm) in cv_temp_dict:
+                        objects_non_bnodes = cv_temp_dict[str(clm)]
+                    objects_non_bnodes.append(str(vlu))
+                    cv_temp_dict[str(clm)] = objects_non_bnodes
+
+        claim_and_value_dictionary = cv_temp_dict
+        # _______________________                  ____________________#
+
+        # labels and descriptions
         labels_of_subject_wb = self.get_information_of_item_or_property_as_dictionary(wb_id, 'labels')
         descriptions_of_subject_wb = self.get_information_of_item_or_property_as_dictionary(wb_id, 'descriptions')
         # _______________________                  ____________________#
@@ -321,7 +408,7 @@ class Converter:
         # _______________________ SUBJECT EXISTS IN WB AND NOT RDF ____________________#
         if not subjects_check.__contains__(str(subject_rl)):
             self.create_new_triple(claim_and_value_dictionary, descriptions_of_subject_wb, wb_id,
-                                   labels_of_subject_wb, subject_name, subject_rl)
+                                   labels_of_subject_wb, subject_name, subject_rl, bnodes_of_wb)
             return
         # _______________________                  ____________________#
 
@@ -428,7 +515,7 @@ class Converter:
         return self.graph
 
     def create_new_triple(self, claim_and_value_dictionary, descriptions_of_subject_wb, wb_id, labels_of_subject_wb,
-                          subject_name, subject_rl):
+                          subject_name, subject_rl, bnodes_of_wb: dict):
         """
         creates new triple if it does not exist in rdf
         Parameters
@@ -439,6 +526,7 @@ class Converter:
         labels_of_subject_wb: dict of labels and languages used in wikibase of wb item or prop
         subject_name: subject name in rdf
         subject_rl: subject related link in wikibase or rdf
+        bnodes_of_wb: anonymous nodes of wb
 
         Returns
         -------
@@ -468,6 +556,25 @@ class Converter:
                 self.binding_namespace_of_graph(value_of_claim)
                 # adding new triple
                 self.graph.add((URIRef(subject_rl), URIRef(new_predicate), URIRef(value_of_claim)))
+        if bnodes_of_wb:
+            for predicate_with_bnode in bnodes_of_wb.keys():
+                for bnode_object in bnodes_of_wb[predicate_with_bnode]:
+                    a_bnode = BNode()
+                    self.graph.add((URIRef(subject_rl), URIRef(predicate_with_bnode), a_bnode))
+                    claim_id = self.get_id_from_related_link(related_link=str(bnode_object))
+                    print(claim_id)
+                    final_dict = self.get_related_link_of_values_of_a_claim_in_wb(str(claim_id))
+
+                    for new_predicate in final_dict.keys():
+                        # adding new namespaces if they doesn't exist
+                        self.binding_namespace_of_graph(new_predicate)
+                        logger.warning('new predicate <' + new_predicate + '> for the item/subject <' + subject_name
+                                       + '> with wikibase ID <' + wb_id + '>')
+                        for value_of_claim in final_dict[str(new_predicate)]:
+                            # adding new namespaces if they doesn't exist
+                            self.binding_namespace_of_graph(value_of_claim)
+                            # adding new triple
+                            self.graph.add((a_bnode, URIRef(new_predicate), URIRef(value_of_claim)))
 
     def binding_namespace_of_graph(self, related_link_of_item):
         """
@@ -480,10 +587,11 @@ class Converter:
         -------
         nothing, updates the namespaces of a graph
         """
-        if str(get_namespace(related_link_of_item)) not in dict(self.graph.namespaces()).values():
-            for key, namespace in default_rdf_namespaces.items():
-                if str(namespace) == str(get_namespace(related_link_of_item)):
-                    self.graph.bind(str(key), str(namespace))
+        if re.match(valid_url_regex, related_link_of_item) is not None:
+            if str(get_namespace(related_link_of_item)) not in dict(self.graph.namespaces()).values():
+                for key, namespace in default_rdf_namespaces.items():
+                    if str(namespace) == str(get_namespace(related_link_of_item)):
+                        self.graph.bind(str(key), str(namespace))
 
     def get_items_properties_to_sync(self):
         """
@@ -530,3 +638,18 @@ class Converter:
         """
         self.graph.parse(file_path, format="ttl")  # currently using ttl. change it to your format.
         return self.graph
+
+    def get_id_from_related_link(self, related_link):
+        """
+        returns the id of an item or property with a specific related link
+        Parameters
+        ----------
+        related_link: of the item or prop that is a bnode
+        Returns
+        -------
+        wikibase id
+        """
+        label_to_search = "/genid/" + get_triple_subject_str(related_link)
+        request = self.wbsearchentities(label_to_search)
+        item_id = request.json()['search'][0]['id']
+        return item_id

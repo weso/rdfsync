@@ -2,7 +2,7 @@
 from .errors import StringValidationError
 import re
 
-regex = re.compile(
+valid_url_regex = re.compile(
     r'^(?:http|ftp)s?://'  # http:// or https://
     r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
     r'localhost|'  # localhost...
@@ -24,7 +24,7 @@ def get_triple_subject_str(subject):
     """
     if not subject:
         return ''
-    if re.match(regex, subject) is not None:
+    if re.match(valid_url_regex, subject) is not None:
         if '#' in subject:
             object_to_string = str(subject).rsplit("/", 1)[-1]
             obj_name = object_to_string.rpartition("#")[2]
@@ -49,7 +49,7 @@ def get_triple_predicate_str(predicate):
     """
     if not predicate:
         return ''
-    if re.match(regex, predicate) is not None:
+    if re.match(valid_url_regex, predicate) is not None:
         if '#' in predicate:
             object_to_string = str(predicate).rsplit("/", 1)[-1]
             obj_name = object_to_string.rpartition("#")[2]
@@ -75,7 +75,7 @@ def get_namespace(link_string):
     example : input: http://www.w3.org/2002/07/owl#Class
               returns: http://www.w3.org/2002/07/owl#
     """
-    if re.match(regex, link_string) is not None:
+    if re.match(valid_url_regex, link_string) is not None:
         if '#' in link_string:
             i = link_string.index('#')
             return link_string[:i + len('#')]

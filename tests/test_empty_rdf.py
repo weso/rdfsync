@@ -1,9 +1,12 @@
 from .common import MEDIAWIKI_API_URL
-from rdflib import URIRef, Graph, BNode
+from rdflib import URIRef, Graph, Literal
 from rdfsync.wb2rdf.conversion import Converter
+from rdflib.namespace import XSD
 
 wikibase_id = 'Q8'
 wikibase_id_2 = 'Q19'
+wikibase_id_3 = 'Q15'
+
 graph = Graph()
 
 triple_1 = ((URIRef('http://www.purl.org/hercules/asio/core#AdministrativePersonnel'),
@@ -46,6 +49,10 @@ triple_2_bnode = ((URIRef('http://www.w3.org/2002/07/owl#Example'),
                    URIRef('http://www.w3.org/2000/01/rdf-schema#subClassOf'),
                    URIRef('http://www.w3.org/2002/07/owl#Thing')))
 
+triple_genid_1 = ((URIRef('http://purl.org/hercules/asio/core#/genid/cb0'),
+                   URIRef('http://www.w3.org/2002/07/owl#maxCardinality'),
+                   Literal('1', datatype=XSD.integer)))
+
 
 def test_populate_empty_rdf():
     converter = Converter(endpoint=MEDIAWIKI_API_URL, input_format='ttl', graph=graph)
@@ -63,10 +70,19 @@ def test_populate_empty_rdf():
 
 
 def test_populate_empty_rdf_with_bnodes():
-    graph = Graph()
-    converter = Converter(endpoint=MEDIAWIKI_API_URL, input_format='ttl', graph=graph)
-    assert len(graph) == 0
+    graph2 = Graph()
+    converter = Converter(endpoint=MEDIAWIKI_API_URL, input_format='ttl', graph=graph2)
+    assert len(graph2) == 0
     converter.execute_synchronization(wb_id=wikibase_id_2)
-    assert graph.__contains__(triple_1_bnode)
-    assert graph.__contains__(triple_2_bnode)
-    assert len(graph) == 7  # plus the label plus the bnodes cannot be tested because random
+    assert graph2.__contains__(triple_1_bnode)
+    assert graph2.__contains__(triple_2_bnode)
+    assert len(graph2) == 7  # plus the label plus the bnodes cannot be tested because random
+
+
+def test_populate_empty_rdf_with_different_types():
+    graph3 = Graph()
+    converter = Converter(endpoint=MEDIAWIKI_API_URL, input_format='ttl', graph=graph3)
+    assert len(graph3) == 0
+    converter.execute_synchronization(wb_id=wikibase_id_3)
+    assert graph3.__contains__(triple_genid_1)
+    assert len(graph3) == 4

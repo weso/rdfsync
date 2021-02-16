@@ -1,11 +1,13 @@
 import requests
 import re
 from rdflib import RDFS, Graph, BNode
-from rdfsync.util.string_util import get_namespace, get_triple_predicate_str, get_triple_subject_str, valid_url_regex
+from rdfsync.util.string_util import get_namespace, get_triple_predicate_str, get_triple_subject_str, valid_url_regex, \
+    is_date, is_time_format
 from rdflib import URIRef, Literal
 import xml.etree.ElementTree as ET
 from rdfsync.util.namespace_constants import default_rdf_namespaces
 import logging
+from rdflib.namespace import XSD
 
 # logger settings
 logging.basicConfig()
@@ -488,8 +490,7 @@ class Converter:
                     logger.warning('addition of <' + str(get_triple_predicate_str(
                         predicate_to_add)) + '> in rdf because predicate exists in wb but is not in rdf.')
                     for value_of_claim in claim_and_value_dictionary[predicate_to_add]:
-                        self.graph.add((URIRef(subject_rl), URIRef(predicate_to_add),
-                                        URIRef(value_of_claim)))
+                        self.add_to_graph(subject_rl, predicate_to_add, value_of_claim)
         else:
             logger.info('same predicates in the item/subject <' + subject_name + '> with wikibase ID <' + wb_id + '>')
 
@@ -511,8 +512,60 @@ class Converter:
                         self.graph.remove((URIRef(subject_rl), URIRef(predicate_to_update), None))
                         # updating with new value
                         for value_of_claim in claim_and_value_dictionary[str(predicate_to_update)]:
-                            self.graph.add((URIRef(subject_rl), URIRef(predicate_to_update), URIRef(value_of_claim)))
+                            self.add_to_graph(subject_rl, predicate_to_update, value_of_claim)
         return self.graph
+
+    def add_to_graph(self, subject_rl, predicate_to_add, value_of_claim):
+        # subject is or is not bnode
+        final_subject_to_add = URIRef(subject_rl)
+        if type(subject_rl) == BNode:
+            final_subject_to_add = subject_rl
+
+        # value of claim
+        if re.match(valid_url_regex, value_of_claim):
+            self.graph.add(
+                (final_subject_to_add, URIRef(predicate_to_add), URIRef(value_of_claim)))
+        else:
+            try:
+                # int
+                final_value_to_object = int(value_of_claim)
+                self.graph.add(
+                    (final_subject_to_add, URIRef(predicate_to_add),
+                     Literal(final_value_to_object, datatype=XSD.integer)))
+                return
+            except ValueError:
+                try:
+                    # long
+                    final_value_to_object = float(value_of_claim)
+                    self.graph.add(
+                        (final_subject_to_add, URIRef(predicate_to_add),
+                         Literal(final_value_to_object, datatype=XSD.long)))
+                    return
+                except ValueError:
+                    try:
+                        # is time
+                        final_value_to_object = str(value_of_claim)
+                        if is_time_format(final_value_to_object):
+                            self.graph.add(
+                                (final_subject_to_add, URIRef(predicate_to_add),
+                                 Literal(final_value_to_object, datatype=XSD.time)))
+                            return
+                    except ValueError:
+                        try:
+                            # is date
+                            final_value_to_object = str(value_of_claim)
+                            if is_date(final_value_to_object):
+                                self.graph.add(
+                                    (final_subject_to_add, URIRef(predicate_to_add),
+                                     Literal(final_value_to_object, datatype=XSD.date)))
+                                return
+                        except ValueError:
+                            # is date
+                            final_value_to_object = str(value_of_claim)
+                            self.graph.add(
+                                (final_subject_to_add, URIRef(predicate_to_add),
+                                 Literal(final_value_to_object, datatype=XSD.string)))
+                            return
 
     def create_new_triple(self, claim_and_value_dictionary, descriptions_of_subject_wb, wb_id, labels_of_subject_wb,
                           subject_name, subject_rl, bnodes_of_wb: dict):
@@ -555,7 +608,7 @@ class Converter:
                 # adding new namespaces if they doesn't exist
                 self.binding_namespace_of_graph(value_of_claim)
                 # adding new triple
-                self.graph.add((URIRef(subject_rl), URIRef(new_predicate), URIRef(value_of_claim)))
+                self.add_to_graph(subject_rl, new_predicate, value_of_claim)
         if bnodes_of_wb:
             for predicate_with_bnode in bnodes_of_wb.keys():
                 for bnode_object in bnodes_of_wb[predicate_with_bnode]:
@@ -574,7 +627,7 @@ class Converter:
                             # adding new namespaces if they doesn't exist
                             self.binding_namespace_of_graph(value_of_claim)
                             # adding new triple
-                            self.graph.add((a_bnode, URIRef(new_predicate), URIRef(value_of_claim)))
+                            self.add_to_graph(a_bnode, new_predicate, value_of_claim)
 
     def binding_namespace_of_graph(self, related_link_of_item):
         """

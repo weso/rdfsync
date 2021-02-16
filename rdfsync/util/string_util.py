@@ -1,6 +1,8 @@
 """ Module to get the names of each subject, predicate, object of a triple individually"""
 from .errors import StringValidationError
 import re
+from dateutil.parser import parse
+import time
 
 valid_url_regex = re.compile(
     r'^(?:http|ftp)s?://'  # http:// or https://
@@ -84,3 +86,26 @@ def get_namespace(link_string):
             return link_string.rsplit('/', 1)[0] + '/'
     else:
         raise StringValidationError()
+
+
+def is_date(string, fuzzy=False):
+    """
+    Return whether the string can be interpreted as a date.
+
+    :param string: str, string to check for date
+    :param fuzzy: bool, ignore unknown tokens in string if True
+    """
+    try:
+        parse(string, fuzzy=fuzzy)
+        return True
+
+    except ValueError:
+        return False
+
+
+def is_time_format(input):
+    try:
+        time.strptime(input, '%H:%M')
+        return True
+    except ValueError:
+        return False

@@ -527,12 +527,24 @@ class Converter:
         return self.graph
 
     def add_to_graph(self, subject_rl, predicate_to_add, value_of_claim):
+        """
+        adds a triple to a graph depending on the type of the subject and the object
+        Parameters
+        ----------
+        subject_rl: related link / uri of subject
+        predicate_to_add: predicate to be added
+        value_of_claim: object to be added
+
+        Returns
+        -------
+        nothing, updates the graph with the newly added triple
+        """
         # subject is or is not bnode
         final_subject_to_add = URIRef(subject_rl)
         if type(subject_rl) == BNode:
             final_subject_to_add = subject_rl
 
-        # value of claim
+        # value of claim is a URI
         if re.match(valid_url_regex, value_of_claim):
             self.graph.add(
                 (final_subject_to_add, URIRef(predicate_to_add), URIRef(value_of_claim)))
@@ -639,6 +651,7 @@ class Converter:
         nothing, updates the graph
         """
         if bnodes_of_wb:
+            logger.warning('Updating the subject <' + str(subject_name) + '> with anonymous nodes.')
             for predicate_with_bnode in bnodes_of_wb.keys():
                 for bnode_object in bnodes_of_wb[predicate_with_bnode]:
                     a_bnode = BNode()
@@ -675,7 +688,7 @@ class Converter:
 
     def get_items_properties_to_sync(self):
         """
-
+        returns the wb items/props that has been changed
         Returns
         -------
         set of items/properties that suffered change in the last number_of_days passed as param in the class creation
@@ -707,7 +720,7 @@ class Converter:
 
     def read_file_and_create_graph(self, file_path: str):
         """
-        reads a rdf file and converts it to rdflib graph
+        created a new class graph and reads a rdf file and converts it to rdflib graph
         Parameters
         ----------
         file_path: path of the rdf file
@@ -716,6 +729,7 @@ class Converter:
         -------
         the resulting graph of the rdf file
         """
+        self.graph = Graph()
         self.graph.parse(file_path, format="ttl")  # currently using ttl. change it to your format.
         return self.graph
 

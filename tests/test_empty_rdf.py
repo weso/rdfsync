@@ -95,7 +95,7 @@ def test_populate_empty_rdf_with_bnodes():
     assert len(graph2) == 11  # plus the label plus the bnodes cannot be tested because random
 
 
-def test_populate_empty_rdf_with_different_types():
+def test_populate_empty_rdf_with_different_object_types():
     graph3 = Graph()
     converter = Converter(endpoint=MEDIAWIKI_API_URL, input_format='ttl', graph=graph3)
     assert len(graph3) == 0

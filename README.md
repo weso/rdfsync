@@ -18,7 +18,7 @@ from rdfsync.githubcon.github_connection import update_github_repo
 import ntpath
 
 # graph ops
-file_path = FILE_PATH  # your rdf file path, even if it's empty
+file_path = FILE_PATH  # your rdf file path, even if the file's empty
 
 # algorithm execution
 converter = Converter(endpoint=MEDIAWIKI_API_URL, input_format='ttl')  # http://XXX/w/api.php

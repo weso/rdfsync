@@ -7,7 +7,7 @@ with open(path.join(curr_dir, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='rdfsync',
-    version='0.0.1',
+    version='0.1.0',
     packages=['rdfsync', 'rdfsync.util', 'rdfsync.githubcon', 'rdfsync.wb2rdf'],
     url='https://github.com/weso/rdfsync',
     license='MIT',
@@ -16,7 +16,8 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     install_requires=[
-        'requests==2.23.0', 'rdflib==5.0.0', 'PyGithub==1.53'
+        'requests==2.23.0', 'rdflib==5.0.0', 'PyGithub==1.53',
+        'pytest~=6.1.0', 'python-dateutil~=2.8.1'
     ],
     classifiers=[
         'Intended Audience :: Developers',

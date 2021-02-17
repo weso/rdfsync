@@ -55,7 +55,7 @@ triple_genid_1 = ((URIRef('http://purl.org/hercules/asio/core#/genid/cb0'),
 
 triple_genid_2 = ((URIRef('http://purl.org/hercules/asio/core#/genid/cb0'),
                    URIRef('http://www.w3.org/2002/07/owl#maxCardinality'),
-                   Literal('2.0', datatype=XSD.long)))
+                   Literal('2.0', datatype=XSD.double)))
 
 triple_genid_3 = ((URIRef('http://purl.org/hercules/asio/core#/genid/cb0'),
                    URIRef('http://www.w3.org/2002/07/owl#maxCardinality'),

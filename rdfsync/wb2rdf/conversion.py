@@ -513,6 +513,17 @@ class Converter:
                         # updating with new value
                         for value_of_claim in claim_and_value_dictionary[str(predicate_to_update)]:
                             self.add_to_graph(subject_rl, predicate_to_update, value_of_claim)
+
+        # _______________________ BNodes ____________________#
+        if bnodes_of_rdf:
+            for key in bnodes_of_rdf.keys():
+                for value in bnodes_of_rdf[key]:
+                    self.graph.remove((value, None, None))
+                    self.graph.remove((None, None, value))
+        # creating bnodes
+        self.create_bnodes_in_graph(wb_id, bnodes_of_wb, subject_rl, subject_name)
+        # _______________________                  ____________________#
+
         return self.graph
 
     def add_to_graph(self, subject_rl, predicate_to_add, value_of_claim):
@@ -536,11 +547,11 @@ class Converter:
                 return
             except ValueError:
                 try:
-                    # long
+                    # double and floats
                     final_value_to_object = float(value_of_claim)
                     self.graph.add(
                         (final_subject_to_add, URIRef(predicate_to_add),
-                         Literal(final_value_to_object, datatype=XSD.long)))
+                         Literal(final_value_to_object, datatype=XSD.double)))
                     return
                 except ValueError:
                     try:
@@ -610,15 +621,30 @@ class Converter:
                 self.binding_namespace_of_graph(value_of_claim)
                 # adding new triple
                 self.add_to_graph(subject_rl, new_predicate, value_of_claim)
+        # creates bnodes
+        self.create_bnodes_in_graph(wb_id, bnodes_of_wb, subject_rl, subject_name)
+
+    def create_bnodes_in_graph(self, wb_id, bnodes_of_wb, subject_rl, subject_name):
+        """
+        creates bnodes or anonymous nodes for a certain subject
+        Parameters
+        ----------
+        wb_id: wikibase id of item or prop
+        bnodes_of_wb: dictionary of bnodes in wb
+        subject_rl: subject uri
+        subject_name: subject name / label
+
+        Returns
+        -------
+        nothing, updates the graph
+        """
         if bnodes_of_wb:
             for predicate_with_bnode in bnodes_of_wb.keys():
                 for bnode_object in bnodes_of_wb[predicate_with_bnode]:
                     a_bnode = BNode()
                     self.graph.add((URIRef(subject_rl), URIRef(predicate_with_bnode), a_bnode))
                     claim_id = self.get_id_from_related_link(related_link=str(bnode_object))
-                    print(claim_id)
                     final_dict = self.get_related_link_of_values_of_a_claim_in_wb(str(claim_id))
-
                     for new_predicate in final_dict.keys():
                         # adding new namespaces if they doesn't exist
                         self.binding_namespace_of_graph(new_predicate)

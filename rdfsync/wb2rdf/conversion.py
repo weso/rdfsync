@@ -407,13 +407,6 @@ class Converter:
         descriptions_of_subject_wb = self.get_information_of_item_or_property_as_dictionary(wb_id, 'descriptions')
         # _______________________                  ____________________#
 
-        # _______________________ SUBJECT EXISTS IN WB AND NOT RDF ____________________#
-        if not subjects_check.__contains__(str(subject_rl)):
-            self.create_new_triple(claim_and_value_dictionary, descriptions_of_subject_wb, wb_id,
-                                   labels_of_subject_wb, subject_name, subject_rl, bnodes_of_wb)
-            return
-        # _______________________                  ____________________#
-
         # _______________________ LABELS ____________________#
 
         # comparing labels
@@ -522,6 +515,12 @@ class Converter:
                     self.graph.remove((None, None, value))
         # creating bnodes
         self.create_bnodes_in_graph(wb_id, bnodes_of_wb, subject_rl, subject_name)
+        # _______________________                  ____________________#
+
+        # _______________________ SUBJECT EXISTS IN WB AND NOT RDF ____________________#
+        if not subjects_check.__contains__(str(subject_rl)):
+            self.create_new_triple(claim_and_value_dictionary, descriptions_of_subject_wb, wb_id,
+                                   labels_of_subject_wb, subject_name, subject_rl, bnodes_of_wb)
         # _______________________                  ____________________#
 
         return self.graph

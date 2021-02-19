@@ -17,10 +17,6 @@ cd rdfsync
 python setup.py install
 ```
 
-Or, alternatively, You can install the library with pip:
-```bash
-pip install rdfsync
-```
 
 Python 3.7+ is required.
 

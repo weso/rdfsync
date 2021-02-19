@@ -17,11 +17,12 @@ cd rdfsync
 python setup.py install
 ```
 
-Or, alternatively, You can install the library with pip (Not Yet Implemented):
+Or, alternatively, You can install the library with pip:
 ```bash
 pip install rdfsync
 ```
-Python 3.7+ is recommended.
+
+Python 3.7+ is required.
 
 ## How to synchronize 
 With the following code you can synchronize the modification of your ontology or rdf file with the updated given Wikibase instance:

@@ -6,38 +6,49 @@
 [![License](https://img.shields.io/github/license/weso/rdfsync)](https://github.com/weso/rdfsync/blob/master/LICENSE)
 [![Version](https://img.shields.io/badge/version-0.1.0-blue)](https://github.com/weso/rdfsync)
 
-
 An algorithm to synchronise data between the ontology files and a given Wikibase instance.
 
 ## How to install
+
 You can install it manually from the source code:
+
 ```bash
 git clone https://github.com/weso/rdfsync
 cd rdfsync
 python setup.py install
 ```
 
-
 Python 3.7+ is required.
 
-## How to synchronize 
-With the following code you can synchronize the modification of your ontology or rdf file with the updated given Wikibase instance:
+## How to synchronize
+
+With the following code you can synchronize the modification of your ontology or rdf file with the updated given
+Wikibase instance:
 
 ```python
 from rdfsync.wb2rdf.conversion import Converter
 from rdfsync.githubcon.github_connection import update_github_repo
+from rdflib import Graph
 import ntpath
 
 # graph ops
-file_path = FILE_PATH  # your rdf file path, even if the file's empty
+file_path = FILE_PATH  # your rdf file path, required even if the file's empty
 
 # algorithm execution
 converter = Converter(endpoint=MEDIAWIKI_API_URL, input_format='ttl')  # (http|https)://XXX/w/api.php
-converter.read_file_and_create_graph(file_path) # creates a graph from the rdf file
-for item_property in converter.get_items_properties_to_sync():
-    converter.execute_synchronization(wb_id=item_property) #synchronization
+converter.read_file_and_create_graph(file_path)  # creates a graph from the rdf file
 
-# pushing the changes to github
+# items_props_to_sync = {'P228', 'Q1', 'P10'} # if you know the items that changed
+items_props_to_sync = converter.get_items_properties_to_sync()
+for item_property in items_props_to_sync:
+    converter.execute_synchronization(wb_id=item_property)  # synchronization
+
+# if you want to create the file in a specific directory, UNCOMMENT THE FOLLOWING CODE
+# final_graph = Graph()
+# final_graph.parse(converter.serialize_file(output_format='ttl'))
+# final_graph.serialize(FILE_DESTINATION, format='ttl', encoding='utf8')
+
+# pushing the changes to github in a specific branch and pull request
 github_token = GITHUB_ACCESS_TOKEN  # personalized github access token
 repository_name = GITHUB_TARGET_REPO  # your github repository name
 source_branch = SOURCE_BRANCH  # master or main

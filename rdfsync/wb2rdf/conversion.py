@@ -12,6 +12,9 @@ from rdflib.namespace import XSD
 # logger settings
 logging.basicConfig()
 logger = logging.getLogger("conversion")
+# constants
+SAME_AS_LABEL = 'same as'
+RELATED_LINK_LABEL = 'related link'
 
 
 class Converter:
@@ -161,7 +164,8 @@ class Converter:
         data = requests.get(self.API_ENDPOINT, params=self.get_params_of_wbgetclaims(wb_id))
         for wb_property in data.json()['claims']:
             data = self.wbgetentity(wb_property)
-            if self.get_labels_of_item_or_property(data, wb_property)['en']['value'] not in ['related link', 'same as']:
+            if self.get_labels_of_item_or_property(data, wb_property)['en']['value'] not in [RELATED_LINK_LABEL,
+                                                                                             SAME_AS_LABEL]:
                 claims.append(wb_property)
         return claims
 
@@ -248,7 +252,7 @@ class Converter:
         data = requests.get(self.API_ENDPOINT, params=self.get_params_of_wbgetclaims(wb_id))
         for wb_property in data.json()['claims']:
             req = self.wbgetentity(wb_property)
-            if self.get_labels_of_item_or_property(req, wb_property)['en']['value'] == 'related link':
+            if self.get_labels_of_item_or_property(req, wb_property)['en']['value'] == RELATED_LINK_LABEL:
                 rl = data.json()['claims'][wb_property][0]['mainsnak']['datavalue']['value']
         return rl
 
@@ -268,8 +272,8 @@ class Converter:
         for wb_property in data.json()['claims']:
             req = self.wbgetentity(wb_property)
             rl_of_claim = self.get_related_link_of_a_wb_item_or_property(wb_property)
-            if self.get_labels_of_item_or_property(req, wb_property)['en']['value'] != 'related link' and \
-                    self.get_labels_of_item_or_property(req, wb_property)['en']['value'] != 'same as':
+            if self.get_labels_of_item_or_property(req, wb_property)['en']['value'] != RELATED_LINK_LABEL and \
+                    self.get_labels_of_item_or_property(req, wb_property)['en']['value'] != SAME_AS_LABEL:
                 index = 0
                 rl_claim_values = []
                 while index < len(data.json()['claims'][wb_property]):

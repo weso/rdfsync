@@ -90,20 +90,34 @@ def get_namespace(link_string):
 
 def is_date(string, fuzzy=False):
     """
-    Return whether the string can be interpreted as a date.
 
-    :param string: str, string to check for date
-    :param fuzzy: bool, ignore unknown tokens in string if True
+    Parameters
+    ----------
+    string: str, string to check for date
+    fuzzy: bool, ignore unknown tokens in string if True
+
+    Returns
+    -------
+    true if a string is a correct date format
     """
     try:
         parse(string, fuzzy=fuzzy)
         return True
-
     except ValueError:
         raise ValueError("invalid date format")
 
 
 def is_time_format(input):
+    """
+
+    Parameters
+    ----------
+    input: string of a date
+
+    Returns
+    -------
+    true if a string has a correct time format HH:MM
+    """
     try:
         time.strptime(input, '%H:%M')
         return True

@@ -27,7 +27,7 @@ Wikibase instance:
 
 ```python
 from rdfsync.wb2rdf.conversion import Converter
-from rdfsync.githubcon.github_connection import update_github_repo
+from rdfsync.githubcon.github_connection import GithubConnection
 from rdflib import Graph
 import ntpath
 
@@ -57,8 +57,9 @@ target_branch = TARGET_BRANCH  # your new branch name in order to create the PR
 file_name = ntpath.basename(file_path)
 file_content = converter.serialize_file()
 
-update_github_repo(github_token=github_token, repository_name=repository_name, source_branch=source_branch,
-                   target_branch=target_branch, file_name=file_name, file_content=file_content)
+gitcon = GithubConnection()
+gitcon.update_github_repo(github_token=github_token, repository_name=repository_name, source_branch=source_branch,
+                          target_branch=target_branch, file_name=file_name, file_content=file_content)
 
 ```
 

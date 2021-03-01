@@ -8,7 +8,9 @@ logger = logging.getLogger("github")
 
 
 class GithubConnection:
-    def connect_to_github(self, token):
+
+    @staticmethod
+    def connect_to_github(token):
         """
         connects to github using token
         Parameters
@@ -26,7 +28,8 @@ class GithubConnection:
         except ConnectionError:
             logger.error(msg="Error while connecting to Github")
 
-    def connect_to_repository_github(self, github, target_repo_name):
+    @staticmethod
+    def connect_to_repository_github(github, target_repo_name):
         """
         connects to a specified repository
         Parameters
@@ -45,7 +48,8 @@ class GithubConnection:
         except ConnectionError:
             logger.error(msg="Error while connecting to a repository in Github")
 
-    def create_new_branch(self, repo, base_branch, new_branch_name):
+    @staticmethod
+    def create_new_branch(repo, base_branch, new_branch_name):
         """
         creates a new branch
         Parameters
@@ -66,7 +70,8 @@ class GithubConnection:
         except ConnectionError:
             logger.error(msg="Error while creating a branch in Github")
 
-    def create_file_in_repo(self, repo, file_name, commit_msg, file_content, branch):
+    @staticmethod
+    def create_file_in_repo(repo, file_name, commit_msg, file_content, branch):
         """
         created a file in repository
         Parameters
@@ -87,7 +92,8 @@ class GithubConnection:
         except ConnectionError:
             logger.error(msg="Error while creating a new file in Github")
 
-    def create_pull_request_in_repo(self, repo, title, body, head, base):
+    @staticmethod
+    def create_pull_request_in_repo(repo, title, body, head, base):
         """
 
         Parameters
@@ -107,7 +113,7 @@ class GithubConnection:
             logger.warning("A pull request is successfully created in the repository <" + repo.name + ">")
         except ConnectionError:
             logger.error(msg="Error while creating a PR in Github")
-
+    
     def update_github_repo(self, github_token: str, repository_name: str, source_branch: str, target_branch: str,
                            file_name: str,
                            file_content):

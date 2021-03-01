@@ -107,19 +107,19 @@ def is_date(string, fuzzy=False):
         raise ValueError("invalid date format")
 
 
-def is_time_format(input):
+def is_time_format(string_input):
     """
 
     Parameters
     ----------
-    input: string of a date
+    string_input: string of a date
 
     Returns
     -------
     true if a string has a correct time format HH:MM
     """
     try:
-        time.strptime(input, '%H:%M')
+        time.strptime(string_input, '%H:%M')
         return True
     except ValueError:
         raise ValueError("invalid time format")

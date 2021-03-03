@@ -8,6 +8,8 @@
 
 An algorithm to synchronise data between the ontology files and a given Wikibase instance.
 
+It updates an ontology file from the changes made in your Wikibase instance.
+
 ## How to install
 
 You can install it manually from the source code:

@@ -61,7 +61,7 @@ subject_3_label = ((URIRef('http://www.purl.org/hercules/asio/core#student'),
                     Literal('student', lang='en')))
 
 
-def test_populate_empty_rdf():
+def test_update_labels_and_descriptions():
     assert not graph.__contains__(subject_2_new_description)
     assert graph.__contains__(subject_1_label)
     assert graph.__contains__(subject_1_comment)
@@ -82,7 +82,7 @@ def test_populate_empty_rdf():
     assert graph.__contains__(subject_1_comment)
 
 
-def test_populate_empty_rdf():
+def test_no_labels_or_descriptions():
     graph = Graph()
     graph.parse("tests/data/synchronization/uld2.ttl", format='ttl')
     assert not graph.__contains__(subject_1_label)  # non existent

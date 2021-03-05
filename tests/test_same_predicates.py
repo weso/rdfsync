@@ -27,7 +27,7 @@ triple_non_existent = ((URIRef('http://www.purl.org/hercules/asio/core#Administr
                         URIRef('http://www.purl.org/hercules/asio/core#ResearchPersonnel')))
 
 
-def test_populate_empty_rdf():
+def test_same_predicates_update():
     assert len(graph) == 3
     assert not graph.__contains__(triple_non_existent)
     assert graph.__contains__(subject_same_label)
@@ -41,6 +41,4 @@ def test_populate_empty_rdf():
     assert graph.__contains__(subject_same_label)
     assert graph.__contains__(subject_same_description)
     assert graph.__contains__(subject_same_triple)
-
-
-graph.serialize()
+    graph.serialize()

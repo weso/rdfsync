@@ -28,7 +28,7 @@ triple_5_new_add = ((URIRef('http://www.purl.org/hercules/asio/core#HumanResourc
                      URIRef('http://www.w3.org/2004/02/skos/core#Concept')))
 
 
-def test_populate_empty_rdf():
+def test_add_new_triples():
     assert len(graph) == 2
     assert not graph.__contains__(triple_1_new_add)
     assert not graph.__contains__(triple_5_new_add)

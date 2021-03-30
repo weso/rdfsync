@@ -1,2 +1,0 @@
-class StringValidationError(Exception):
-    pass

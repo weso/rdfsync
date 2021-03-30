@@ -1,6 +1,0 @@
-rdflib==5.0.0
-requests==2.23.0
-PyGithub==1.53
-pytest~=6.1.0
-python-dateutil~=2.8.1
-setuptools~=47.1.0

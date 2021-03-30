@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RDFSync</title>
+  <link rel="icon"  type="image/png" href="images/weso_logo.png">
+
+
+  <link href="doc.min.css" rel="stylesheet" type="text/css" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  </head>
+  <body>
+
+  <a href="https://github.com/weso/rdfsync" target="_blank"><img style="z-index: 1; position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+   <!-- Fixed navbar -->
+    <div class="navbar navbar-inverse" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">RDFSync</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a target="_blank" href="http://www.weso.es/">WESO</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+
+     <div class="container" role="main">
+      	<div class="row" id="aboutYQuery">
+      	    <div class="col-md-12">
+                <h1>Welcome to RDFSync</h1>
+                <p>RDFSync is a python library that synchronize your RDF based ontology from the changes made in a wikibase instance such as <a target="_blank" href='https://www.wbstack.com/'>WBStack</a>. </p>
+                <br> 
+                <p>This <a target="_blank" href='https://github.com/weso/rdfsync/'>library</a> offers mainly the following features:</p>
+                <ul>
+                  <li>Adding triples to the ontology.</li>
+                  <li>Updating triples of the ontology.</li>
+                  <li>Deletion of triples of the ontology.</li>
+                  <li>Communication with a wikibase instance through an API.</li>
+                  <li>Reading data from wikibase and parsing it to RDF.</li>
+                  <li>Creating the ontology in a specific <a target="_blank" href='https://www.github.com/'>Github</a> repository.</li>
+                </ul>
+                <br>
+                <h2>RDFSync components</h2>
+                <br>
+                <div class="bbview"><img src="./images/rdfsync-deployment.png" ></img></div>
+                <br><br>
+                <p>All communication with Github and Wikibase is done through the TCP / IP protocol.</p>
+                <ul>
+                <li>Client: it is the environment of the user that executes the application with the requested information such as the Wikibase endpoint, the url of the ontology ..., etc.</li>
+                <li>Github: it is the user's repository where the new ontology will be created in a file in a new branch whose name is requested from the user.</li>
+                <li>RDFSync: the application that is running</li>
+                <ul>
+                <li>  Converter: it is the component that will be in charge of updating the user's ontology with its representation in the Wikibase instance, generating a new ontology in a format specified by the user but with ttl format by default.</li>
+                <li>  GithubConnection: it is the component that will be in charge of creating the ontology created in the previous step, the user wishes, in a specific repository in a specific branch of Github.</li>
+                </ul>
+                <li>Wikibase: contains all the basic components of a Wikibase instance, whether in Docker, WBstack [23] or others.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+          <img src="./images/weso_logo.png" ></img>
+        </div>
+     </div>
+    </div>
+
+  
+</body>
+</html>

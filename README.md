@@ -10,6 +10,11 @@ An algorithm to synchronise data between the ontology files and a given Wikibase
 
 It updates an ontology file from the changes made in your Wikibase instance.
 
+## Warning Notice
+
+This repository will be read-only and any new changes will be made in the repository [wikibase-sync!](https://github.com/weso/wikibase-sync) destinated to both-way synchronization of ontologies and wikibase instances.
+
+
 ## How to install
 
 You can install it manually from the source code:
